@@ -10,6 +10,9 @@ class User{
     void setStatusBanned(boolean statusBanned){
         this.statusBanned = statusBanned;
     }
+    void display(){
+        System.out.println("name: " + name);
+    }
 
 }
 class Chat{

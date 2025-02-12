@@ -1,5 +1,17 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class UserAndChatController{
+    List <User> userList = new ArrayList<>();
+
+    void addUser(User user){
+        userList.add(user);
+    }
+
     void displayAllUsers(){
+        for (User user : userList) {
+            user.display();
+        }
         //display all user from list
         //option chat, view history, ban and unban available
     }
@@ -38,5 +50,10 @@ class UserAndChatController{
     }
     void exit(){
         //display text
+    }
+
+    public void addUser(int i, int j, String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addUser'");
     }
 }
