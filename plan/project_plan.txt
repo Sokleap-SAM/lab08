@@ -13,48 +13,33 @@ Detail plan:
 -Features:
     1.List users (est time: 1 day):
         -show list of registered users (max 10).
-        -the user can select a person on the list to show chat with, ban, and unban option.
-        -if the user selects a person to chat with, it will lead the user to the chat section.
-        -if the user selects a person to ban, it will block the user and hide the chat history between both users.
-        -if the user selects a person to unban, it will unblock the chat  and unhide the chat history between both users.
 
     2.Search users (est time: 1 day):
         -show only persons that contain names or IDS according to the search of the user.
-        -the user can select a person on the search list to chat with, ban, and unban option.
-        -if the user selects a person to chat with, it will lead the user to the chat section. 
-	-if the user selects a person to ban, it will block the chat and hide the chat history between both users.
- 	-if the user selects a person to unban, it will unblock the chat  and unhide the chat history between both users.
+
     3.Open chat (est time: 1 day):
-        -show only people who users chatted with before on the chat list.
-        -the user can select a person on the chat list or return to the menu. 
-        -if the user selects a person to chat with, it will lead the user to the chat section.
+        -enter user name to chat
+        -option: send message ,view chat history, delete chat history
 
-    4.Chat history (est time: 1 day)
-        -it will display a list of user's chats.
-        -the user can select a chat to view history.
-        -it will show detailed chat (last 30 texts) if the user select a chat history.
-    5.Remove chat history (est time: 1 day)
-        -it will display a list of user's chats.
-        -user must select a chat from the list to delete a chat history.
-        -if the user select a chat, it will delete both users chat history and return to remove chat history section.
-
-    6.Ban user (est time: 1 day)
+    4.Ban user (est time: 1 day)
         -it will display a list of user's chats.
         -it will block the chat and hide the chat history between both users (the person who banned and the person who got banned).
 
-    7.Unban user (est time: 1 day)
+    5.Unban user (est time: 1 day)
         -it will display a list of user's chats.
         -it will unblock the chat and unhide the chat history between both users (the person who banned and the person who got banned).
 
-    8.Exit (est time: 1 day)
+    6.Exit (est time: 1 day)
         -it will display text to ask the user if the user really wants to exit.
         -it will display a "thank you text" if the user agree to exit.
 
 Note: It's a responsive application, so users can travel from feature to feature in the menu.
 
 
--Task 1: Feature number 1, 2, 3, and 8.
--Task 2: Feature number 4, 5, 6, and 7.
+-Task 1: Feature number 1, 2, and 6.
+-Task 2: Feature number 3, 4, and 5.
 
 Kheang Ann: will response for task 1.
 Sam Sokleap: will response for task 2.
+
+Note: Task and responsibility can be change at anytime depends on situation.
