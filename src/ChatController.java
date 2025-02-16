@@ -12,10 +12,10 @@ public class ChatController {
         chatModel.checkFile(userName, myName);
     }
 
-    public void sendMessage() {
+    public void sendMessage(String myName) {
         System.out.print("Your text: ");
         String text = scan.nextLine();
-        chatModel.sendMessage(text);
+        chatModel.sendMessage(text, myName);
     }
 
     public void viewChatHistory() {

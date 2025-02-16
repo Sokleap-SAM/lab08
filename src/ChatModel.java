@@ -16,27 +16,37 @@ public class ChatModel {
         file = new File(filePath);
         if(file.exists()){
             fileStatus = true;
+            return;
         }
+        filePath = userName + "_" + myName + ".txt";
+        file = new File(filePath);
+        if(file.exists()){
+            fileStatus = true;
+            return;
+        }
+        fileStatus = false;
 
     }
 
-    public void sendMessage(String text){
+    public void sendMessage(String text, String myName){
         if(fileStatus == true){
             try {
                 BufferedWriter fw = new BufferedWriter(new FileWriter(filePath, true)); 
-                fw.write(text + "\n");
+                fw.write(myName + ":   " + text + "\n");
                 fw.close();
+                System.out.println("Successfully send message!");
             } catch (Exception e) {
-                System.out.println("Unable to send message!");
+                System.out.println("Unable to send message!\n");
             }
         }
         else{
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false)); 
-                writer.write(text + "\n");
+                writer.write(myName + ":   " + text + "\n");
                 writer.close();
+                System.out.println("Successfully send message!");
             } catch (Exception e) {
-                System.out.println("Unable to send message!");
+                System.out.println("Unable to send message!\n");
             }
         }
     }
@@ -45,12 +55,13 @@ public class ChatModel {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String data;
+            System.out.println("Chat history: ");
             while((data = reader.readLine())!= null){
                 System.out.println(data);
             }
             reader.close();
         } catch (Exception e) {
-            System.out.println("Unable to view chat history");
+            System.out.println("Unable to view chat history!");
         }
     }
 
@@ -59,6 +70,7 @@ public class ChatModel {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
             writer.write("");
             writer.close();
+            System.out.println("Successfully delete chat history!");
         } catch (IOException e) {
             System.out.println("Unable to delete chat history!");
         }
