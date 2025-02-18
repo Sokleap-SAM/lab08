@@ -1,6 +1,0 @@
-class userView{
-
-}
-class chatView{
-
-}
