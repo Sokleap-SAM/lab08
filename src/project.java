@@ -1,36 +1,69 @@
 import java.util.Scanner;
 
-class Menu{
-    void displayMenu(){
+class Menu {
+    void displayMenu() {
         System.out.println("======menu======");
         System.out.println("1. List users");
         System.out.println("2. Search user");
         System.out.println("3. Open chat");
-        System.out.println("4. View chat history");
-        System.out.println("5. Remove chat history");
-        System.out.println("6. Ban user");
-        System.out.println("7. Unban user");
-        System.out.println("8. Exit");
-        System.out.println("Option: ");
+        System.out.println("4. Ban user");
+        System.out.println("5. Unban user");
+        System.out.println("6. Exit");
+        System.out.print("Option: ");
     }
 }
+
 public class project {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        Menu menu = new Menu();
-        UserAndChatController controller = new UserAndChatController();
-        controller.addUser(new User(123, 19, "Leap"));
-        controller.addUser(new User(124, 19, "Ann"));
-        menu.displayMenu();
-        int option = scan.nextInt();
-        scan.nextLine();
-        switch (option) {
-            case 1:
-                controller.displayAllUsers();
-                break;
-        
-            default:
-                break;
+        ChatController chatController = new ChatController();
+        UserController userController = new UserController();
+        userController.addUser(new UserModel("Ann"));
+        userController.addUser(new UserModel("Heng"));
+        int option = 0;
+        System.out.println("Your name: "); //example: Leap
+        String myName = scan.nextLine();
+        while (option != 6) {
+            Menu menu = new Menu();
+            menu.displayMenu();
+            option = scan.nextInt();
+            scan.nextLine();
+            System.out.println();
+            switch (option) {
+                case 1:
+                    userController.displayAllUsers();
+                    break;
+                case 2:
+                case 3:
+                    int chatOption = 0;
+                    System.out.print("Enter username: ");
+                    String UserToChat = scan.nextLine();
+                    // user.search
+                    while (chatOption != 4) {
+                        chatController.displayChatMenu();
+                        System.out.println();
+                        chatOption = scan.nextInt();
+                        chatController.checkFile(UserToChat, myName);
+                        if (chatOption == 1) {
+                            chatController.sendMessage(myName);
+                        } else if (chatOption == 2) {
+                            chatController.viewChatHistory();
+                        } else if (chatOption == 3) {
+                            chatController.deleteChatHistory();
+                        } else if (chatOption == 4) {
+                            System.out.println("Exit chat");
+                        } else {
+                            System.out.println("Invalid option");
+                        }
+                    }
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                default:
+                    break;
+            }
         }
+        scan.close();
     }
 }
