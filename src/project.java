@@ -18,11 +18,15 @@ public class project {
         Scanner scan = new Scanner(System.in);
         ChatController chatController = new ChatController();
         UserController userController = new UserController();
-        userController.addUser(new UserModel("Ann"));
-        userController.addUser(new UserModel("Heng"));
+        userController.addUser(new UserModel(123,19, "Leap"));
+        userController.addUser(new UserModel(222, 19, "Ann"));
+        userController.addUser(new UserModel(223, 20, "Rith"));
         int option = 0;
-        System.out.println("Your name: "); //example: Leap
-        String myName = scan.nextLine();
+        String myName = "Leap";
+        // System.out.print("Your name: "); //example: Leap
+        // String myName = scan.nextLine();
+        // System.out.print("Password: ");
+        // String myPass = scan.nextLine();
         while (option != 6) {
             Menu menu = new Menu();
             menu.displayMenu();
@@ -34,15 +38,17 @@ public class project {
                     userController.displayAllUsers();
                     break;
                 case 2:
+                    userController.searchUser();
+                    break;
                 case 3:
                     int chatOption = 0;
-                    System.out.print("Enter username: ");
+                    System.out.print("Who do you want to chat to? \nEnter username: ");
                     String UserToChat = scan.nextLine();
                     // user.search
                     while (chatOption != 4) {
-                        chatController.displayChatMenu();
-                        System.out.println();
+                        chatController.displayChatMenu();;
                         chatOption = scan.nextInt();
+                        System.out.println();
                         chatController.checkFile(UserToChat, myName);
                         if (chatOption == 1) {
                             chatController.sendMessage(myName);
@@ -55,6 +61,7 @@ public class project {
                         } else {
                             System.out.println("Invalid option");
                         }
+                        System.out.println();
                     }
                     break;
                 case 4:
