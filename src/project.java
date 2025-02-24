@@ -18,11 +18,26 @@ public class project {
         Scanner scan = new Scanner(System.in);
         ChatController chatController = new ChatController();
         UserController userController = new UserController();
-        userController.addUser(new UserModel(123,19, "Leap"));
-        userController.addUser(new UserModel(222, 19, "Ann"));
-        userController.addUser(new UserModel(223, 20, "Rith"));
+        // userController.addUser(new UserModel(123,19, "Leap"));
+        // userController.addUser(new UserModel(222, 19, "Ann"));
+        // userController.addUser(new UserModel(223, 20, "Rith"));
         int option = 0;
-        String myName = "Leap";
+        int choice = 0;
+        while (choice == 0) {
+            System.out.println("1.Register: ");
+            System.out.println("2.Login: ");
+            System.out.print("Option: ");
+            choice = scan.nextInt();
+            scan.nextLine();
+            if (choice == 1) {
+                userController.registerAccount();
+            } else if (choice == 2) {
+                userController.loginAccount();
+            } else {
+                System.out.println("Invalid choice!");
+            }
+        }
+        userController.ReadUsersData();
         // System.out.print("Your name: "); //example: Leap
         // String myName = scan.nextLine();
         // System.out.print("Password: ");
@@ -43,15 +58,14 @@ public class project {
                 case 3:
                     int chatOption = 0;
                     System.out.print("Who do you want to chat to? \nEnter username: ");
-                    String UserToChat = scan.nextLine();
-                    // user.search
+                    String userToChat = scan.nextLine();
                     while (chatOption != 4) {
-                        chatController.displayChatMenu();;
+                        chatController.displayChatMenu();
                         chatOption = scan.nextInt();
                         System.out.println();
-                        chatController.checkFile(UserToChat, myName);
+                        chatController.checkFile(userToChat, userController.getUserName());
                         if (chatOption == 1) {
-                            chatController.sendMessage(myName);
+                            chatController.sendMessage(userController.getUserName());
                         } else if (chatOption == 2) {
                             chatController.viewChatHistory();
                         } else if (chatOption == 3) {
@@ -65,8 +79,15 @@ public class project {
                     }
                     break;
                 case 4:
+                    userController.banUser();
+                    break;
                 case 5:
+                    userController.displayAllBannedUsers();
+                    userController.unbanUser();
+                    break;
                 case 6:
+                    userController.storeUserData();
+                    break;
                 default:
                     break;
             }

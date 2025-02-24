@@ -71,4 +71,8 @@ public class ChatModel {
             System.out.println("Unable to delete history");
         }
     }
+
+    public String getFilePath(){
+        return filePath;
+    }
 }
