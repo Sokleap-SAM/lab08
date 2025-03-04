@@ -15,13 +15,9 @@ public class UserController {
     Scanner input = new Scanner(System.in);
 
     UserController() {
-        user = new UserModel(0, 0, "hi");
+        user = new UserModel(0, "hi", 0, "a", "a");
         userList = new ArrayList<>();
     }
-
-    // void addUser(UserModel user) {
-    // userList.add(user);
-    // }
 
     void displayAllUsers() {
         // Display all users from the list
@@ -39,7 +35,8 @@ public class UserController {
                     String[] pieces = data.split(",");
                     if (user.getUserID() != Integer.parseInt(pieces[0])) {
                         userList.add(
-                                new UserModel(Integer.parseInt(pieces[0]), Integer.parseInt(pieces[2]), pieces[1]));
+                                new UserModel(Integer.parseInt(pieces[0]), pieces[1], Integer.parseInt(pieces[2]),
+                                        pieces[3], pieces[4]));
                     }
                 }
                 br.close();
@@ -49,32 +46,17 @@ public class UserController {
         }
     }
 
-    // void displayAllUsers() {
-    // try {
-    // String data;
-    // BufferedReader br = new BufferedReader(new FileReader("UserData.csv"));
-    // while ((data = br.readLine()) != null) {
-    // String[] pieces = data.split(",");
-    // if (user.getUserID() != Integer.parseInt(pieces[0])) {
-    // System.out.println("ID: " + pieces[0] + " Name: " + pieces[1] + " Age:" +
-    // pieces[2]);
-    // }
-    // }
-    // br.close();
-    // } catch (Exception e) {
-    // System.out.println("Can't display all users");
-    // }
-    // }
-
     void searchUser() {
-        System.out.println("Do you want to search by ID or name?");
+        System.out.println("=====SEARCH USER=====");
+        System.out.println("1. Search by userID");
+        System.out.println("2. Search by Username");
         System.out.print("Answer: ");
-        String ans = input.nextLine().toLowerCase();
+        int ans = input.nextInt();
+        input.nextLine();
 
         boolean found = false;
 
-        // Check ID
-        if (ans.equals("id")) {
+        if (ans == 1) {
             System.out.print("Enter ID: ");
             int id = input.nextInt();
             input.nextLine();
@@ -88,12 +70,12 @@ public class UserController {
             if (!found) {
                 System.out.println("User not found");
             }
-        } else if (ans.equals("name")) { // Check name
+        } else if (ans == 2) { 
             System.out.print("Enter name: ");
             String name = input.nextLine().toLowerCase();
 
             for (UserModel u : userList) {
-                if (u.name.equalsIgnoreCase(name)) { // Fixed name comparison
+                if (u.name.equalsIgnoreCase(name)) { 
                     userView.displayUser(u);
                     found = true;
                 }
@@ -109,54 +91,66 @@ public class UserController {
     }
 
     void banUser() {
-        System.out.println("Welcome to ban option");
-        System.out.print("Enter ID to ban user: ");
-        int bannedUserID = input.nextInt();
-        input.nextLine();
-        if (user.findBannedUserID(bannedUserID)) {
-            user.addBannedUser(bannedUserID);
-            System.out.println("Successfully banned the user");
-        } else {
-            System.out.println("Unable to banned the user (Incorrect user ID)");
+        try {
+            System.out.println("=====BLOCK USER=====");
+            System.out.print("Enter userID to ban the user: ");
+            int blockUserID = input.nextInt();
+            input.nextLine();
+            for (UserModel u : userList) {
+                if (u.getUserID() == blockUserID) {
+                    user.addBannedUser(blockUserID);
+                    System.out.println("Successfully blocked " + u.getUserName());
+                    if (user.findBannedUserID(blockUserID) == false) {
+                        if (user.getBannedUsers().equals("None")) {
+                            user.setBannedUsers(Integer.toString(blockUserID));
+                            return;
+                        } else {
+                            user.setBannedUsers((user.getBannedUsers() + " " + Integer.toString(blockUserID)));
+                            return;
+                        }
+                    } else {
+                        System.out.println("You already block " + u.getUserName());
+                    }
+                }
+            }
+            System.out.println("Incorrect userID");
+        } catch (Exception e) {
+            System.out.println("Invalid Input");
         }
     }
 
     void unbanUser() {
-        System.out.println("Welcome to unban option");
-        System.out.print("Enter ID to unban user: ");
-        int unbannedUserID = input.nextInt();
-        input.nextLine();
-        if (user.findBannedUserID(unbannedUserID)) {
-            user.removeBannedUser(unbannedUserID);
-            System.out.println("Successfully unbanned the user");
-        } else {
-            System.out.println("Unable to banned the user (Incorrect user ID)");
+        try {
+            System.out.println("=====UNBLOCK USER=====");
+            System.out.print("Enter userID to unblock the user: ");
+            int unbannedUserID = input.nextInt();
+            input.nextLine();
+            if (!user.bannedUsersList.isEmpty()) {
+                if (user.findBannedUserID(unbannedUserID)) {
+                    user.removeBannedUser(unbannedUserID);
+                    System.out.println("Successfully unblocked the user");
+                } else {
+                    System.out.println("Incorrect user ID");
+                }
+                return;
+            } else {
+                System.out.println("You haven't block anyone yet!");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input!");
         }
     }
 
     void displayAllBannedUsers() {
-        for (UserModel u : userList) {
-            if (user.findBannedUserID(u.userID)) {
-                userView.displayUser(u);
+        System.out.println("Blocked user:");
+        for (int i : user.bannedUsersList) {
+            for (UserModel u : userList) {
+                if (u.getUserID() == i) {
+                    userView.displayUser(u);
+                }
             }
         }
     }
-    // void displayAllBannedUsers() {
-    // try {
-    // String data;
-    // BufferedReader br = new BufferedReader(new FileReader("UserData.csv"));
-    // while ((data = br.readLine()) != null) {
-    // String[] pieces = data.split(",");
-    // if (user.findBannedUserID(Integer.parseInt(pieces[0]))) {
-    // System.out.println("ID: " + pieces[0] + " Name: " + pieces[1] + " Age:" +
-    // pieces[3]);
-    // }
-    // }
-    // br.close();
-    // } catch (Exception e) {
-    // System.out.println("Can't display all banned users!");
-    // }
-    // }
 
     void registerAccount() {
         int userIndex = 1;
@@ -169,6 +163,7 @@ public class UserController {
         user.setUserName(name);
         user.setAge(age);
         user.setPassword(password);
+        user.setBannedUsers("None");
         try {
             String data;
             if ((new File("UserData.csv")).exists()) {
@@ -180,10 +175,10 @@ public class UserController {
             } else {
                 System.out.println("You are the first user!");
             }
+            user.setUserID((userIndex));
         } catch (Exception e) {
             System.out.println("You can't register an account");
         }
-        user.setUserID((userIndex));
     }
 
     void loginAccount() {
@@ -206,65 +201,115 @@ public class UserController {
                     user.setAge(Integer.parseInt(pieces[2]));
                     user.setPassword(pieces[3]);
                     user.setBannedUserList(pieces[4]);
+                    user.setBannedUsers(pieces[4]);
                     loginStatus = true;
-                    // user.setLoginStatus(true);
                     System.out.println("Login successfully");
                     break;
                 }
             }
             br.close();
             user.setLoginStatus(loginStatus);
-            // if(loginStatus == true){
-            //     user.setLoginStatus(loginStatus);
-            // }
+            if (loginStatus == false) {
+                System.out.println("Failed to login (Incorrect username or password)");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            //System.out.println("Can't Login!" + e);
+            System.out.println("You can't login to your account!");
         }
     }
 
-    void storeUserData() {
-        if (user.getLoginStatus() == false) {
-            File file = new File("UserData.csv");
-            try {
-                BufferedWriter bw = new BufferedWriter(new FileWriter("UserData.csv", true));
-                bw.write(
-                        user.getUserID() + "," + user.getUserName() + "," + user.getUserAge() + "," + user.getPassword()
-                                + ",");
-                for (int u : user.bannedUsersList) {
-                    if (user.bannedUsersList.isEmpty()) {
-                        bw.write("None");
-                    }
-                    bw.write(u + " ");
-                }
-                bw.write("\n");
-                bw.close();
-            } catch (Exception e) {
-                System.out.println("Can't Store Your Data!");
-            }
-        }
-    }
+    // void storeUserData() {
+    //     boolean selfWritten = false;
+    //     File file = new File("UserData.csv");
+
+    //     try {
+    //         BufferedWriter bw = new BufferedWriter(new FileWriter("UserData.csv", true));
+    //         for (UserModel u : userList) {
+    //             if (user.getUserID() < u.getUserID() && selfWritten == false) {
+    //                 bw.write(
+    //                         user.getUserID() + "," + user.getUserName() + "," + user.getUserAge() + ","
+    //                                 + user.getPassword()
+    //                                 + ",");
+
+    //                 if (user.bannedUsersList.size() == 0) {
+    //                     bw.write(user.getBannedUsers());
+    //                 } else {
+    //                     for (int uID : user.bannedUsersList) {
+    //                         if (user.bannedUsersList.isEmpty()) {
+    //                             bw.write("None");
+    //                             break;
+    //                         }
+    //                         bw.write(uID + " ");
+    //                     }
+    //                     bw.write("\n");
+    //                     selfWritten = true;
+
+    //                 }
+
+    //                 if (u.getUserID() != user.getUserID()) {
+    //                     bw.write(
+    //                             u.getUserID() + "," + u.getUserName() + "," + u.getUserAge() + ","
+    //                                     + u.getPassword()
+    //                                     + "," + u.getBannedUsers() + "\n");
+    //                 }
+    //             }
+    //             if (selfWritten == false) {
+    //                 bw.write(
+    //                         user.getUserID() + "," + user.getUserName() + "," + user.getUserAge() + ","
+    //                                 + user.getPassword()
+    //                                 + ",");
+
+    //                 if (user.bannedUsersList.size() == 0) {
+    //                     bw.write(user.getBannedUsers());
+    //                 } else {
+    //                     for (int uID : user.bannedUsersList) {
+    //                         if (user.bannedUsersList.isEmpty()) {
+    //                             bw.write("None");
+    //                             break;
+    //                         }
+    //                         bw.write(uID + " ");
+    //                     }
+    //                 }
+    //                 bw.write("\n");
+    //                 selfWritten = true;
+    //             }
+    //         }
+    //         bw.close();
+    //     } catch (Exception e) {
+    //         System.out.println("Can't Store Your Data!");
+    //     }
+    // }
 
     String getUserName() {
         return user.getUserName();
     }
 
-    // void readUserData(){
-    // try {
-    // String data;
-    // BufferedReader br = new BufferedReader(new FileReader("UserData.csv"));
-    // while ((data = br.readLine()) != null) {
-    // String[] pieces = data.split(",");
-    // user.setUserID(Integer.parseInt(pieces[0]));
-    // user.setUserName(pieces[1]);
-    // user.setAge(Integer.parseInt(pieces[2]));
-    // user.setPassword(pieces[3]);
-    // user.setBannedUserList(pieces[4]);
-    // }
-    // br.close();
-    // } catch (Exception e) {
-    // System.out.println("Can't Login");
-    // }
-    // }
+    void storeUserData() {
+        File file = new File("UserData.csv");
+
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("UserData.csv", false));
+            if (userList.get(userList.size() - 1).getUserID() < user.getUserID()) {
+                userList.add(user);
+            } else {
+                userList.add(user.getUserID() - 1, user);
+            }
+            for (UserModel u : userList) {
+                bw.write(u.getUserID() + "," + u.getUserName() + "," + u.getUserAge() + "," + u.getPassword() + ","
+                        + u.getBannedUsers() + "\n");
+            }
+            bw.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    boolean checkExistingUser(String name) {
+        for (UserModel u : userList) {
+            if (u.getUserName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
