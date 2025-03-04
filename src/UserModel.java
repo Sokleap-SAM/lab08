@@ -4,13 +4,17 @@ public class UserModel {
     int userID, age;
     String name;
     String password;
+    String bannedUsers;
     Boolean loginStatus = false;
-    ArrayList<Integer> bannedUsersList = new ArrayList<>();
+    ArrayList<Integer> bannedUsersList;
 
-    UserModel(int userID, int age, String name) {
+    UserModel(int userID, String name, int age, String password, String bannedUsers) {
+        bannedUsersList = new ArrayList<>();
         this.userID = userID;
         this.age = age;
         this.name = name;
+        this.password = password;
+        this.bannedUsers = bannedUsers;
     }
 
     void addBannedUser(int id) {
@@ -18,7 +22,7 @@ public class UserModel {
     }
 
     void removeBannedUser(int id) {
-        bannedUsersList.remove(id);
+        bannedUsersList.remove(id-1);
     }
 
     void setBannedUserList(String bannedUsers){
@@ -41,10 +45,6 @@ public class UserModel {
         return false;
     }
 
-    // void setStatusBanned(boolean statusBanned) {
-    //     this.statusBanned = statusBanned;
-    // }
-
     void setUserID(int id) {
         this.userID = id;
     }
@@ -65,6 +65,10 @@ public class UserModel {
         this.loginStatus = loginStatus;
     }
 
+    void setBannedUsers(String bannedUsers){
+        this.bannedUsers = bannedUsers;
+    }
+
     int getUserID() {
         return userID;
     }
@@ -83,5 +87,9 @@ public class UserModel {
 
     boolean getLoginStatus(){
         return loginStatus;
+    }
+
+    String getBannedUsers(){
+        return bannedUsers;
     }
 }
