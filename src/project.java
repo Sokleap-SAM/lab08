@@ -18,9 +18,6 @@ public class project {
         Scanner scan = new Scanner(System.in);
         ChatController chatController = new ChatController();
         UserController userController = new UserController();
-        // userController.addUser(new UserModel(123,19, "Leap"));
-        // userController.addUser(new UserModel(222, 19, "Ann"));
-        // userController.addUser(new UserModel(223, 20, "Rith"));
         int option = 0;
         int choice = 0;
         while (choice == 0) {
@@ -56,26 +53,32 @@ public class project {
                     userController.searchUser();
                     break;
                 case 3:
-                    int chatOption = 0;
                     System.out.print("Who do you want to chat to? \nEnter username: ");
                     String userToChat = scan.nextLine();
-                    while (chatOption != 4) {
-                        chatController.displayChatMenu();
-                        chatOption = scan.nextInt();
-                        System.out.println();
-                        chatController.checkFile(userToChat, userController.getUserName());
-                        if (chatOption == 1) {
-                            chatController.sendMessage(userController.getUserName());
-                        } else if (chatOption == 2) {
-                            chatController.viewChatHistory();
-                        } else if (chatOption == 3) {
-                            chatController.deleteChatHistory();
-                        } else if (chatOption == 4) {
-                            System.out.println("Exit chat");
-                        } else {
-                            System.out.println("Invalid option");
+                    if (userController.checkExistingUser(userToChat)) {
+                        int chatOption = 0;
+                        while (chatOption != 4) {
+                            try {
+                                chatController.checkFile(userToChat, userController.getUserName());
+                                chatController.displayChatMenu();
+                                chatOption = scan.nextInt();
+                                if (chatOption == 1) {
+                                    chatController.sendMessage(userController.getUserName());
+                                } else if (chatOption == 2) {
+                                    chatController.viewChatHistory();
+                                } else if (chatOption == 3) {
+                                    chatController.deleteChatHistory();
+                                } else if (chatOption == 4) {
+                                    System.out.println("Exit chat");
+                                } else {
+                                    System.out.println("Invalid option");
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Invalid input");
+                            }
                         }
-                        System.out.println();
+                    } else {
+                        System.out.println("User Not Found");
                     }
                     break;
                 case 4:
@@ -86,7 +89,7 @@ public class project {
                     userController.unbanUser();
                     break;
                 case 6:
-                    userController.storeUserData();
+                    userController.storeUserDatas();
                     break;
                 default:
                     break;
