@@ -48,7 +48,6 @@ public class project {
             System.out.print("Option: ");
             option = scan.nextInt();
             scan.nextLine();
-            System.out.println();
             switch (option) {
                 case 1:
                     userController.displayAllUsers();
@@ -64,31 +63,24 @@ public class project {
                         while (chatOption != 4) {
                             chatController.checkFile(userToChat, userController.getUserName());
                             chatController.displayChatMenu();
-                            try {
-                                chatOption = scan.nextInt();
-                                if (scan.hasNextInt()) {
-                                    chatOption = scan.nextInt();
-                                    if (chatOption == 1) {
-                                        chatController.sendMessage(userController.getUserName());
-                                    } else if (chatOption == 2) {
-                                        chatController.viewChatHistory();
-                                    } else if (chatOption == 3) {
-                                        chatController.deleteChatHistory();
-                                    } else if (chatOption == 4) {
-                                        System.out.println("Exit chat");
-                                        break;
-                                    } else {
-                                        System.out.println("Invalid option");
-                                    }
-                                } else {
-                                    System.out.println("Invalid Input (Please enter number)\n");
-                                    scan.next();
-                                }
-                            } catch (InputMismatchException e) {
+                            chatOption = scan.nextInt();
+                            scan.nextLine();
+                            chatOption = scan.nextInt();
+                            if (chatOption == 1) {
+                                chatController.sendMessage(userController.getUserName());
+                            } else if (chatOption == 2) {
+                                chatController.viewChatHistory();
+                            } else if (chatOption == 3) {
+                                chatController.deleteChatHistory();
+                            } else if (chatOption == 4) {
+                                System.out.println("Exit chat");
+                            } else {
+                                System.out.println("Invalid option");
                             }
                         }
+                    } else {
+                        System.out.println("User Not Found");
                     }
-                    System.out.println("User Not Found");
                     break;
                 case 4:
                     userController.banUser();

@@ -19,7 +19,6 @@ public class UserController {
         userList = new ArrayList<>();
     }
 
-    
     boolean registerAccount() {
         int userIndex = 1;
         int age;
@@ -226,14 +225,20 @@ public class UserController {
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("UserData.csv", false));
-            if (userList.get(userList.size() - 1).getUserID() < user.getUserID()) {
-                userList.add(user);
+            if (userList.isEmpty()) {
+                bw.write(user.getUserID() + "," + user.getUserName() + "," + user.getUserAge() + ","
+                        + user.getPassword() + ","
+                        + user.getBannedUsers() + "\n");
             } else {
-                userList.add(user.getUserID() - 1, user);
-            }
-            for (UserModel u : userList) {
-                bw.write(u.getUserID() + "," + u.getUserName() + "," + u.getUserAge() + "," + u.getPassword() + ","
-                        + u.getBannedUsers() + "\n");
+                if (userList.get(userList.size() - 1).getUserID() < user.getUserID()) {
+                    userList.add(user);
+                } else {
+                    userList.add(user.getUserID() - 1, user);
+                }
+                for (UserModel u : userList) {
+                    bw.write(u.getUserID() + "," + u.getUserName() + "," + u.getUserAge() + "," + u.getPassword() + ","
+                            + u.getBannedUsers() + "\n");
+                }
             }
             bw.close();
         } catch (Exception e) {
