@@ -5,7 +5,6 @@ public class UserModel {
     String name;
     String password;
     String bannedUsers;
-    Boolean loginStatus = false;
     ArrayList<Integer> bannedUsersList;
 
     UserModel(int userID, String name, int age, String password, String bannedUsers) {
@@ -61,10 +60,6 @@ public class UserModel {
         this.age = age;
     }
 
-    void setLoginStatus(boolean loginStatus){
-        this.loginStatus = loginStatus;
-    }
-
     void setBannedUsers(String bannedUsers){
         this.bannedUsers = bannedUsers;
     }
@@ -83,10 +78,6 @@ public class UserModel {
 
     String getPassword() {
         return password;
-    }
-
-    boolean getLoginStatus(){
-        return loginStatus;
     }
 
     String getBannedUsers(){
