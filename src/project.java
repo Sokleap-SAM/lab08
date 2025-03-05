@@ -1,18 +1,5 @@
 import java.util.Scanner;
 
-class Menu {
-    void displayMenu() {
-        System.out.println("======menu======");
-        System.out.println("1. List users");
-        System.out.println("2. Search user");
-        System.out.println("3. Open chat");
-        System.out.println("4. Ban user");
-        System.out.println("5. Unban user");
-        System.out.println("6. Exit");
-        System.out.print("Option: ");
-    }
-}
-
 public class project {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
@@ -26,22 +13,33 @@ public class project {
             System.out.print("Option: ");
             choice = scan.nextInt();
             scan.nextLine();
-            if (choice == 1) {
-                userController.registerAccount();
-            } else if (choice == 2) {
-                userController.loginAccount();
-            } else {
-                System.out.println("Invalid choice!");
+            try {
+                if (choice == 1) {
+                    userController.registerAccount();
+                } else if (choice == 2) {
+                    userController.loginAccount();
+                    if(userController.getLoginStatus() == false){
+                        choice = 0;
+                    }
+                }
+                else{
+                    System.out.println("Inavlid choice!");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input!");
+                choice = 0;
             }
         }
         userController.ReadUsersData();
-        // System.out.print("Your name: "); //example: Leap
-        // String myName = scan.nextLine();
-        // System.out.print("Password: ");
-        // String myPass = scan.nextLine();
         while (option != 6) {
-            Menu menu = new Menu();
-            menu.displayMenu();
+            System.out.println("======menu======");
+            System.out.println("1. List users");
+            System.out.println("2. Search user");
+            System.out.println("3. Open chat");
+            System.out.println("4. Ban user");
+            System.out.println("5. Unban user");
+            System.out.println("6. Exit");
+            System.out.print("Option: ");
             option = scan.nextInt();
             scan.nextLine();
             System.out.println();
@@ -89,7 +87,7 @@ public class project {
                     userController.unbanUser();
                     break;
                 case 6:
-                    userController.storeUserDatas();
+                    userController.storeUserData();
                     break;
                 default:
                     break;
