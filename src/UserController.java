@@ -99,21 +99,20 @@ public class UserController {
             for (UserModel u : userList) {
                 if (u.getUserID() == blockUserID) {
                     user.addBannedUser(blockUserID);
-                    System.out.println("Successfully blocked " + u.getUserName());
                     if (user.findBannedUserID(blockUserID) == false) {
+                        System.out.println("Successfully blocked " + u.getUserName());
                         if (user.getBannedUsers().equals("None")) {
                             user.setBannedUsers(Integer.toString(blockUserID));
-                            return;
                         } else {
                             user.setBannedUsers((user.getBannedUsers() + " " + Integer.toString(blockUserID)));
-                            return;
                         }
                     } else {
                         System.out.println("You already block " + u.getUserName());
                     }
+                    return;
                 }
             }
-            System.out.println("Incorrect userID");
+                System.out.println("Incorrect userID");
         } catch (Exception e) {
             System.out.println("Invalid Input");
         }
@@ -310,6 +309,10 @@ public class UserController {
             }
         }
         return false;
+    }
+
+    boolean getLoginStatus(){
+        return user.getLoginStatus();
     }
 
 }
