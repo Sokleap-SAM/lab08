@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class project {
@@ -7,22 +8,27 @@ public class project {
         UserController userController = new UserController();
         int option = 0;
         int choice = 0;
+        boolean registerAccount;
+        boolean loginAccount;
         while (choice == 0) {
-            System.out.println("1.Register: ");
-            System.out.println("2.Login: ");
-            System.out.print("Option: ");
-            choice = scan.nextInt();
-            scan.nextLine();
             try {
+                System.out.println("1.Register: ");
+                System.out.println("2.Login: ");
+                System.out.print("Option: ");
+                choice = scan.nextInt();
+                scan.nextLine();
+                System.out.println(choice);
                 if (choice == 1) {
-                    userController.registerAccount();
-                } else if (choice == 2) {
-                    userController.loginAccount();
-                    if(userController.getLoginStatus() == false){
+                    registerAccount = userController.registerAccount();
+                    if (registerAccount == false) {
                         choice = 0;
                     }
-                }
-                else{
+                } else if (choice == 2) {
+                    loginAccount = userController.loginAccount();
+                    if (loginAccount == false) {
+                        choice = 0;
+                    }
+                } else {
                     System.out.println("Inavlid choice!");
                 }
             } catch (Exception e) {
@@ -32,7 +38,7 @@ public class project {
         }
         userController.ReadUsersData();
         while (option != 6) {
-            System.out.println("======menu======");
+            System.out.println("\n======menu======");
             System.out.println("1. List users");
             System.out.println("2. Search user");
             System.out.println("3. Open chat");
@@ -56,28 +62,33 @@ public class project {
                     if (userController.checkExistingUser(userToChat)) {
                         int chatOption = 0;
                         while (chatOption != 4) {
+                            chatController.checkFile(userToChat, userController.getUserName());
+                            chatController.displayChatMenu();
                             try {
-                                chatController.checkFile(userToChat, userController.getUserName());
-                                chatController.displayChatMenu();
                                 chatOption = scan.nextInt();
-                                if (chatOption == 1) {
-                                    chatController.sendMessage(userController.getUserName());
-                                } else if (chatOption == 2) {
-                                    chatController.viewChatHistory();
-                                } else if (chatOption == 3) {
-                                    chatController.deleteChatHistory();
-                                } else if (chatOption == 4) {
-                                    System.out.println("Exit chat");
+                                if (scan.hasNextInt()) {
+                                    chatOption = scan.nextInt();
+                                    if (chatOption == 1) {
+                                        chatController.sendMessage(userController.getUserName());
+                                    } else if (chatOption == 2) {
+                                        chatController.viewChatHistory();
+                                    } else if (chatOption == 3) {
+                                        chatController.deleteChatHistory();
+                                    } else if (chatOption == 4) {
+                                        System.out.println("Exit chat");
+                                        break;
+                                    } else {
+                                        System.out.println("Invalid option");
+                                    }
                                 } else {
-                                    System.out.println("Invalid option");
+                                    System.out.println("Invalid Input (Please enter number)\n");
+                                    scan.next();
                                 }
-                            } catch (Exception e) {
-                                System.out.println("Invalid input");
+                            } catch (InputMismatchException e) {
                             }
                         }
-                    } else {
-                        System.out.println("User Not Found");
                     }
+                    System.out.println("User Not Found");
                     break;
                 case 4:
                     userController.banUser();
