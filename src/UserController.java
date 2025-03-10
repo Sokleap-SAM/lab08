@@ -23,7 +23,7 @@ public class UserController {
         int age;
         System.out.print("\nName: ");
         String name = input.nextLine();
-        if(checkExistingUser(name)){
+        if (checkExistingUser(name)) {
             System.out.println("Username already exist! Please choose a different username");
             return false;
         }
@@ -156,22 +156,26 @@ public class UserController {
         System.out.println("\n=====BLOCK USER=====");
         System.out.print("Enter username to block the user: ");
         String name = input.nextLine();
+        int id = 0;
         for (UserModel u : userList) {
-            if (checkExistingUser(name)) {
-                int id = u.getUserID();
-                for (int ID : user.getBlockedUsersList()) {
-                    if (ID == id) {
-                        System.out.println("You already blocked " + name);
-                        return;
-                    }
-                }
-                user.addblockedUser(u.getUserID());
-                System.out.println("Successfully blocked " + name);
-                storeUserData();
+            if (u.getUserName().equals(name)) {
+                id = u.getUserID();
+                break;
+            }
+        }
+        if(id == 0){
+            System.out.println("Incorrect userName!");
+            return;
+        }
+        for (int ID : user.getBlockedUsersList()) {
+            if (ID == id) {
+                System.out.println("You already blocked " + name);
                 return;
             }
         }
-        System.out.println("Incorrect userName!");
+        user.addblockedUser(id);
+        System.out.println("Successfully blocked " + name);
+        storeUserData();
     }
 
     void unblockUser() {
@@ -181,10 +185,14 @@ public class UserController {
             System.out.print("Enter username to unblock the user: ");
             String name = input.nextLine();
             for (UserModel u : userList) {
-                if (checkExistingUser(name)) {
+                if (u.getUserName().equals(name)) {
                     id = u.getUserID();
                     break;
                 }
+            }
+            if(id == 0){
+                System.out.println("Incorrect userName!");
+                return;
             }
             for (int ID : user.getBlockedUsersList()) {
                 if (ID == id) {
@@ -194,7 +202,7 @@ public class UserController {
                     return;
                 }
             }
-            System.out.println("Incorrect userName!");
+            System.out.println("You haven't ban " + name + " yet");
         }
     }
 
@@ -242,6 +250,26 @@ public class UserController {
                 return true;
             }
         }
+        return false;
+    }
+
+    boolean checkExistingUserAndNotBlockedUser(String name){
+        int id = 0;
+        for (UserModel u : userList) {
+            if (u.getUserName().equalsIgnoreCase(name)) {
+                id = u.getUserID();
+            }
+        }
+        if(id == 0){
+            System.out.println("Incorrect username");
+            return false;
+        }
+        for(int ID: user.getBlockedUsersList()){
+            if(id == ID){
+                return true;
+            }
+        }
+        System.out.println("You blocked " + name + " ! Please unblocked him to access chat with him");
         return false;
     }
 

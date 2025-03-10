@@ -56,7 +56,7 @@ public class project {
                         userController.displayAllUsers();
                         System.out.print("Who do you want to chat to?\n Number his/her username: ");
                         String userToChat = scan.nextLine();
-                        if (userController.checkExistingUser(userToChat)) {
+                        if (userController.checkExistingUserAndNotBlockedUser(userToChat)) {
                             int chatOption = 0;
                             while (chatOption != 4) {
                                 chatController.checkFile(userToChat, userController.getUserName());
@@ -80,8 +80,6 @@ public class project {
                                     scan.next(); 
                                 }
                             }
-                        } else {
-                            System.out.println("User Not Found");
                         }
                         break;
                     case 4:
