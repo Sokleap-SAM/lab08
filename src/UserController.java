@@ -50,6 +50,7 @@ public class UserController {
                 user = new UserModel(userID, name, age, password, "None");
                 user.setBlockedUserList();
                 userList.add(user);
+                storeUserData();
                 return true;
             } else {
                 System.out.println("Please enter age in number!");
@@ -112,43 +113,59 @@ public class UserController {
         System.out.println("\n=====SEARCH USER=====");
         System.out.println("1. Search by userID");
         System.out.println("2. Search by Username");
-        System.out.print("Answer: ");
-        int ans = input.nextInt();
-        input.nextLine();
+        while (true) {
+            System.out.print("Answer: ");
+            if (input.hasNextInt()) {
+                int ans = input.nextInt();
+                input.nextLine();
 
-        boolean found = false;
+                boolean found = false;
 
-        if (ans == 1) {
-            System.out.print("Enter ID: ");
-            int id = input.nextInt();
-            input.nextLine();
+                if (ans == 1) {
+                    System.out.print("Enter ID: ");
+                    int id = input.nextInt();
+                    input.nextLine();
 
-            for (UserModel u : userList) {
-                if (u.userID == id) {
-                    userView.displayUser(u);
-                    found = true;
+                    for (UserModel u : userList) {
+                        if (u.userID == id) {
+                            userView.displayUser(u);
+                            if (id == user.getUserID()) {
+                                System.out.println(" (Me)");
+                            }
+                            System.out.println();
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("User not found");
+                    }
+                    break;
+                } else if (ans == 2) {
+                    System.out.print("Enter name: ");
+                    String name = input.nextLine().toLowerCase();
+
+                    for (UserModel u : userList) {
+                        if (u.name.equalsIgnoreCase(name)) {
+                            userView.displayUser(u);
+                            if (user.getUserName().equalsIgnoreCase(name)) {
+                                System.out.println(" (Me)");
+                            }
+                            System.out.println();
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        System.out.println("User not found");
+                    }
+                    break;
+                } else {
+                    System.out.println("Wrong input!");
                 }
+            } else {
+                System.out.println("Please enter a number.");
+                input.next();
             }
-            if (!found) {
-                System.out.println("User not found");
-            }
-        } else if (ans == 2) {
-            System.out.print("Enter name: ");
-            String name = input.nextLine().toLowerCase();
-
-            for (UserModel u : userList) {
-                if (u.name.equalsIgnoreCase(name)) {
-                    userView.displayUser(u);
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                System.out.println("User not found");
-            }
-
-        } else {
-            System.out.println("Wrong input!");
         }
     }
 
@@ -158,12 +175,12 @@ public class UserController {
         String name = input.nextLine();
         int id = 0;
         for (UserModel u : userList) {
-            if (u.getUserName().equals(name)) {
+            if (u.getUserName().equalsIgnoreCase(name) && !user.getUserName().equalsIgnoreCase(name)) {
                 id = u.getUserID();
                 break;
             }
         }
-        if(id == 0){
+        if (id == 0) {
             System.out.println("Incorrect userName!");
             return;
         }
@@ -185,20 +202,25 @@ public class UserController {
             System.out.print("Enter username to unblock the user: ");
             String name = input.nextLine();
             for (UserModel u : userList) {
-                if (u.getUserName().equals(name)) {
+                if (u.getUserName().equalsIgnoreCase(name)) {
                     id = u.getUserID();
                     break;
                 }
             }
-            if(id == 0){
+            if (id == 0) {
                 System.out.println("Incorrect userName!");
                 return;
             }
+            System.out.println(user.getBlockedUsersList().size());
             for (int ID : user.getBlockedUsersList()) {
                 if (ID == id) {
-                    System.out.println("Successfully unblocked " + name);
-                    user.removeblockedUser(ID);
-                    storeUserData();
+                    if (user.getBlockedUsersList().size() != 1) {
+                        System.out.println("Successfully unblocked " + name);
+                        user.removeblockedUser(id);
+                        storeUserData();
+                        return;
+                    }
+                    user.getBlockedUsersList().clear();
                     return;
                 }
             }
@@ -253,24 +275,24 @@ public class UserController {
         return false;
     }
 
-    boolean checkExistingUserAndNotBlockedUser(String name){
+    boolean checkExistingUserAndNotBlockedUser(String name) {
         int id = 0;
         for (UserModel u : userList) {
-            if (u.getUserName().equalsIgnoreCase(name)) {
+            if (u.getUserName().equalsIgnoreCase(name) && !user.getUserName().equalsIgnoreCase(name)) {
                 id = u.getUserID();
             }
         }
-        if(id == 0){
+        if (id == 0) {
             System.out.println("Incorrect username");
             return false;
         }
-        for(int ID: user.getBlockedUsersList()){
-            if(id == ID){
-                return true;
+        for (int ID : user.getBlockedUsersList()) {
+            if (id == ID) {
+                System.out.println("You blocked " + name + " ! Please unblocked him to access chat with him");
+                return false;
             }
         }
-        System.out.println("You blocked " + name + " ! Please unblocked him to access chat with him");
-        return false;
+        return true;
     }
 
     String getUserName() {

@@ -66,7 +66,6 @@ public class project {
                             int chatOption = 0;
                             while (chatOption != 4) {
                                 chatController.checkFile(userToChat, userController.getUserName());
-                                System.out.print("\033c");
                                 chatController.displayChatMenu();
                                 if (scan.hasNextInt()) {
                                     chatOption = scan.nextInt();
