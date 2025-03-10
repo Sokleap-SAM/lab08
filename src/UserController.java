@@ -211,7 +211,6 @@ public class UserController {
                 System.out.println("Incorrect userName!");
                 return;
             }
-            System.out.println(user.getBlockedUsersList().size());
             for (int ID : user.getBlockedUsersList()) {
                 if (ID == id) {
                     if (user.getBlockedUsersList().size() != 1) {
