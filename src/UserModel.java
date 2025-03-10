@@ -1,47 +1,20 @@
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class UserModel {
     int userID, age;
     String name;
     String password;
-    String bannedUsers;
-    ArrayList<Integer> bannedUsersList;
+    String blockedUsers;
+    ArrayList<Integer> blockedUsersList;
 
-    UserModel(int userID, String name, int age, String password, String bannedUsers) {
-        bannedUsersList = new ArrayList<>();
+    UserModel(int userID, String name, int age, String password, String blockedUsers) {
+        blockedUsersList = new ArrayList<>();
         this.userID = userID;
         this.age = age;
         this.name = name;
         this.password = password;
-        this.bannedUsers = bannedUsers;
-    }
-
-    void addBannedUser(int id) {
-        bannedUsersList.add(id);
-    }
-
-    void removeBannedUser(int id) {
-        bannedUsersList.remove(id-1);
-    }
-
-    void setBannedUserList(String bannedUsers){
-        if(bannedUsers.equals("None")){
-            return;
-        }
-        String[] bannedUser = bannedUsers.split(" ");
-        for(String user: bannedUser){
-            int bannedUserID = Integer.parseInt(user);
-            bannedUsersList.add(bannedUserID);
-        }
-    }
-
-    boolean findBannedUserID(int id){
-        for(int userID: bannedUsersList){
-            if(userID == id){
-                return true;
-            }
-        }
-        return false;
+        this.blockedUsers = blockedUsers;
     }
 
     void setUserID(int id) {
@@ -60,8 +33,8 @@ public class UserModel {
         this.age = age;
     }
 
-    void setBannedUsers(String bannedUsers){
-        this.bannedUsers = bannedUsers;
+    void setBlockedUsers(String blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     int getUserID() {
@@ -80,7 +53,32 @@ public class UserModel {
         return password;
     }
 
-    String getBannedUsers(){
-        return bannedUsers;
+    String getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    void addblockedUser(int id) {
+        blockedUsersList.add(id);
+    }
+
+    void removeblockedUser(int id) {
+        blockedUsersList.remove(id - 1);
+    }
+
+    void setBlockedUserList() {
+        if (!blockedUsers.equals("None")) {
+            String[] blockedUser = blockedUsers.split(":");
+            for (int i = 0; i < blockedUser.length; i++) {
+                blockedUsersList.add(Integer.parseInt(blockedUser[i]));
+            }
+        }
+    }
+
+    ArrayList<Integer> getBlockedUsersList() {
+        return blockedUsersList;
+    }
+
+    String convertBlockedUserListToString() {
+        return blockedUsersList.stream().map(Object::toString).collect(Collectors.joining(":"));
     }
 }
