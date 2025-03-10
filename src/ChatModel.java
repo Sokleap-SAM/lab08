@@ -72,7 +72,7 @@ public class ChatModel {
         }
     }
 
-    public String getFilePath(){
+    public String getFilePath() {
         return filePath;
     }
 }

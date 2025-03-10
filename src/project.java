@@ -14,9 +14,9 @@ public class project {
             System.out.print("Option: ");
             if (scan.hasNextInt()) {
                 choice = scan.nextInt();
-                scan.nextLine(); 
+                scan.nextLine();
                 if (choice == 1) {
-                    if(userController.registerAccount()){
+                    if (userController.registerAccount()) {
                         break;
                     }
                 } else if (choice == 2) {
@@ -28,7 +28,7 @@ public class project {
                 }
             } else {
                 System.out.println("Invalid input! Please enter a number.");
-                scan.next(); 
+                scan.next();
             }
         }
         while (option != 6) {
@@ -44,26 +44,33 @@ public class project {
             if (scan.hasNextInt()) {
                 option = scan.nextInt();
                 scan.nextLine();
-
+                System.out.print("\033c");
                 switch (option) {
                     case 1:
                         userController.displayAllUsers();
+                        System.out.println("\n\nPress enter to continue! ");
+                        scan.nextLine();
+                        System.out.print("\033c");
                         break;
                     case 2:
                         userController.searchUser();
+                        System.out.println("\n\nPress enter to continue! ");
+                        scan.nextLine();
+                        System.out.print("\033c");
+                        scan.nextLine();
                         break;
                     case 3:
-                        userController.displayAllUsers();
-                        System.out.print("Who do you want to chat to?\n Number his/her username: ");
+                        System.out.print("\nWho do you want to chat to?\nEnter his/her username: ");
                         String userToChat = scan.nextLine();
                         if (userController.checkExistingUserAndNotBlockedUser(userToChat)) {
                             int chatOption = 0;
                             while (chatOption != 4) {
                                 chatController.checkFile(userToChat, userController.getUserName());
+                                System.out.print("\033c");
                                 chatController.displayChatMenu();
                                 if (scan.hasNextInt()) {
                                     chatOption = scan.nextInt();
-                                    scan.nextLine(); 
+                                    scan.nextLine();
                                     if (chatOption == 1) {
                                         chatController.sendMessage(userController.getUserName());
                                     } else if (chatOption == 2) {
@@ -77,19 +84,28 @@ public class project {
                                     }
                                 } else {
                                     System.out.println("Invalid input! Please enter a number.");
-                                    scan.next(); 
+                                    scan.next();
                                 }
                             }
                         }
+                        System.out.println("\n\nPress enter to continue! ");
+                        scan.nextLine();
+                        System.out.print("\033c");
                         break;
                     case 4:
                         userController.blockUser();
+                        System.out.println("\n\nPress enter to continue! ");
+                        scan.nextLine();
+                        System.out.print("\033c");
                         break;
                     case 5:
                         userController.unblockUser();
+                        System.out.println("\n\nPress enter to continue! ");
+                        scan.nextLine();
+                        System.out.print("\033c");
                         break;
                     case 6:
-                        userController.storeUserData();
+                        System.out.println("Exiting!");
                         break;
                     default:
                         System.out.println("Invalid option!");
@@ -97,7 +113,7 @@ public class project {
                 }
             } else {
                 System.out.println("Invalid input! Please enter a number.");
-                scan.next(); 
+                scan.next();
             }
         }
         scan.close();

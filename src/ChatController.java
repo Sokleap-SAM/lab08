@@ -8,7 +8,7 @@ public class ChatController {
         ChatView.displayMenu();
     }
 
-    public void checkFile(String userName, String myName){
+    public void checkFile(String userName, String myName) {
         chatModel.checkFile(userName, myName);
     }
 
