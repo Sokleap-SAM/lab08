@@ -23,24 +23,39 @@ public class UserController {
         int age;
         System.out.print("\nName: ");
         String name = input.nextLine();
-        System.out.print("Password: ");
-        String password = input.nextLine();
-        System.out.print("Age: ");
-        age = input.nextInt();
-        input.nextLine();
-        if (age <= 0 || age > 100) {
-            System.out.println("Invalid age");
+        if(checkExistingUser(name)){
+            System.out.println("Username already exist! Please choose a different username");
             return false;
         }
-        if (!(new File("UserData.csv")).exists()) {
-            System.out.println("You are the first user!");
+        System.out.print("Password: ");
+        String password = input.nextLine();
+        if (password.length() < 8) {
+            System.out.println("Password must be at least 8 characters long");
+            return false;
         }
-        userID = userID + userList.size();
-        System.out.println("Successfully registered an account");
-        user = new UserModel(userID, name, age, password, "None");
-        user.setBlockedUserList();
-        userList.add(user);
-        return true;
+        while (true) {
+            System.out.print("Age: ");
+            if (input.hasNextInt()) {
+                age = input.nextInt();
+                input.nextLine();
+                if (age < 8 || age > 100) {
+                    System.out.println("Invalid age! Age must be between 8 and 100.");
+                    continue;
+                }
+                if (!(new File("UserData.csv")).exists()) {
+                    System.out.println("\nYou are the first user!");
+                }
+                userID = userID + userList.size();
+                System.out.println("Successfully registered an account");
+                user = new UserModel(userID, name, age, password, "None");
+                user.setBlockedUserList();
+                userList.add(user);
+                return true;
+            } else {
+                System.out.println("Please enter age in number!");
+                input.next();
+            }
+        }
     }
 
     boolean loginAccount() {
@@ -52,7 +67,8 @@ public class UserController {
         password = input.nextLine();
         for (UserModel u : userList) {
             if ((name.equals(u.getUserName())) && password.equals(u.password)) {
-                user = new UserModel(u.getUserID(), u.getUserName(), u.getUserAge(), u.getPassword(), u.getBlockedUsers());
+                user = new UserModel(u.getUserID(), u.getUserName(), u.getUserAge(), u.getPassword(),
+                        u.getBlockedUsers());
                 user.setBlockedUserList();
                 System.out.println("Login successfully");
                 return true;
@@ -141,7 +157,7 @@ public class UserController {
         System.out.print("Enter username to block the user: ");
         String name = input.nextLine();
         for (UserModel u : userList) {
-            if (u.getUserName().equals(name)) {
+            if (checkExistingUser(name)) {
                 int id = u.getUserID();
                 for (int ID : user.getBlockedUsersList()) {
                     if (ID == id) {
@@ -165,7 +181,7 @@ public class UserController {
             System.out.print("Enter username to unblock the user: ");
             String name = input.nextLine();
             for (UserModel u : userList) {
-                if (u.getUserName().equals(name)) {
+                if (checkExistingUser(name)) {
                     id = u.getUserID();
                     break;
                 }
@@ -176,8 +192,8 @@ public class UserController {
                     user.removeblockedUser(ID);
                     storeUserData();
                     return;
-                    }
                 }
+            }
             System.out.println("Incorrect userName!");
         }
     }
@@ -202,13 +218,12 @@ public class UserController {
 
     void storeUserData() {
         try {
-            if(!user.getBlockedUsersList().isEmpty()){
+            if (!user.getBlockedUsersList().isEmpty()) {
                 user.setBlockedUsers(user.convertBlockedUserListToString());
-            }
-            else{
+            } else {
                 user.setBlockedUsers("None");
             }
-            userList.set(user.getUserID()-1, user);
+            userList.set(user.getUserID() - 1, user);
             BufferedWriter bw = new BufferedWriter(new FileWriter("UserData.csv", false));
             bw.write("ID, Name, Age, Password, BlockedUserID\n");
             for (UserModel u : userList) {
@@ -223,7 +238,7 @@ public class UserController {
 
     boolean checkExistingUser(String name) {
         for (UserModel u : userList) {
-            if (u.getUserName().equals(name)) {
+            if (u.getUserName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
