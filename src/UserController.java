@@ -227,6 +227,8 @@ public class UserController {
                         return;
                     }
                     user.getBlockedUsersList().clear();
+                    System.out.println("Successfully unblocked " + name);
+                    storeUserData();
                     return;
                 }
             }

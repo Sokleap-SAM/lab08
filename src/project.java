@@ -79,7 +79,7 @@ public class project {
                         if (userController.checkExistingUserAndNotBlockedUser(userToChat)) {
                             int chatOption = 0;
                             while (chatOption != 4) {
-                                chatController.checkFile(userToChat, userController.getUserName());
+                                chatController.checkFile(userToChat.toLowerCase(), userController.getUserName().toLowerCase());
                                 chatController.displayChatMenu();
                                 if (scan.hasNextInt()) {
                                     chatOption = scan.nextInt();
