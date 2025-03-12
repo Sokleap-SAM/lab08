@@ -9,6 +9,17 @@ public class project {
         int choice;
         userController.loadUsersData();
         while (true) {
+            System.out.println("\r\n" + //
+                                " /$$      /$$           /$$                                                     /$$                                                                                       /$$           /$$                                     /$$ /$$          \r\n" + //
+                                "| $$  /$ | $$          | $$                                                    | $$                                                                                      |__/          | $$                                    | $$|__/          \r\n" + //
+                                "| $$ /$$$| $$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$        /$$$$$$    /$$$$$$         /$$$$$$  /$$   /$$  /$$$$$$         /$$$$$$$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$ | $$       /$$$$$$/$$$$   /$$$$$$   /$$$$$$$ /$$  /$$$$$$ \r\n" + //
+                                "| $$/$$ $$ $$ /$$__  $$| $$ /$$_____/ /$$__  $$| $$_  $$_  $$ /$$__  $$      |_  $$_/   /$$__  $$       /$$__  $$| $$  | $$ /$$__  $$       /$$_____/ /$$__  $$ /$$_____/| $$ |____  $$| $$      | $$_  $$_  $$ /$$__  $$ /$$__  $$| $$ |____  $$\r\n" + //
+                                "| $$$$_  $$$$| $$$$$$$$| $$| $$      | $$  \\ $$| $$ \\ $$ \\ $$| $$$$$$$$        | $$    | $$  \\ $$      | $$  \\ $$| $$  | $$| $$  \\__/      |  $$$$$$ | $$  \\ $$| $$      | $$  /$$$$$$$| $$      | $$ \\ $$ \\ $$| $$$$$$$$| $$  | $$| $$  /$$$$$$$\r\n" + //
+                                "| $$$/ \\  $$$| $$_____/| $$| $$      | $$  | $$| $$ | $$ | $$| $$_____/        | $$ /$$| $$  | $$      | $$  | $$| $$  | $$| $$             \\____  $$| $$  | $$| $$      | $$ /$$__  $$| $$      | $$ | $$ | $$| $$_____/| $$  | $$| $$ /$$__  $$\r\n" + //
+                                "| $$/   \\  $$|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$        |  $$$$/|  $$$$$$/      |  $$$$$$/|  $$$$$$/| $$             /$$$$$$$/|  $$$$$$/|  $$$$$$$| $$|  $$$$$$$| $$      | $$ | $$ | $$|  $$$$$$$|  $$$$$$$| $$|  $$$$$$$\r\n" + //
+                                "|__/     \\__/ \\_______/|__/ \\_______/ \\______/ |__/ |__/ |__/ \\_______/         \\___/   \\______/        \\______/  \\______/ |__/            |_______/  \\______/  \\_______/|__/ \\_______/|__/      |__/ |__/ |__/ \\_______/ \\_______/|__/ \\_______/\r\n" + //
+                                "                                                                                                                                                                                                                                                 \r\n" + //
+                                "");
             System.out.println("\n1.Register: ");
             System.out.println("2.Login: ");
             System.out.print("Option: ");
@@ -32,14 +43,17 @@ public class project {
             }
         }
         while (option != 6) {
-            System.out.println("\n======menu======");
-            System.out.println("1. List users");
-            System.out.println("2. Search user");
-            System.out.println("3. Open chat");
-            System.out.println("4. Block user");
-            System.out.println("5. Unblock user");
-            System.out.println("6. Exit");
-            System.out.print("Option: ");
+            System.out.println("\n╔═══════════════════════╗");
+            System.out.println("║       MAIN MENU       ║");
+            System.out.println("╠═══════════════════════╣");
+            System.out.println("║ 1.   List Users       ║");
+            System.out.println("║ 2.   Search User      ║");
+            System.out.println("║ 3.   Open Chat        ║");
+            System.out.println("║ 4.   Block User       ║");
+            System.out.println("║ 5.   Unblock User     ║");
+            System.out.println("║ 6.   Exit             ║");
+            System.out.println("╚═══════════════════════╝");
+            System.out.print("  Select an option: ");
 
             if (scan.hasNextInt()) {
                 option = scan.nextInt();

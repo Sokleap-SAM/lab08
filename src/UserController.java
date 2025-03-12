@@ -99,20 +99,27 @@ public class UserController {
     }
 
     void displayAllUsers() {
-        System.out.println("\nUsers: ");
+        System.out.println("\n╔══════════════════════════════════╗");
+        System.out.println("║           USER LIST              ║");
+        System.out.println("╠════╦═══════╦═════════════════════╣");
+        System.out.println("║ ID │ Age   │ Name                ║");
+        System.out.println("╠════╬═══════╬═════════════════════╣");
+    
         for (UserModel u : userList) {
-            userView.displayUser(u);
-            if (user.getUserID() == u.getUserID()) {
-                System.out.print(" (ME)");
-            }
-            System.out.println("");
+            String meTag = (user.getUserID() == u.getUserID()) ? " (ME)" : "";
+            System.out.printf("║ %-2d │ %-5d │ %-20s║\n", u.getUserID(), u.getUserAge(), u.getUserName() + meTag);
         }
+    
+        System.out.println("╚════╩═══════╩═════════════════════╝");
     }
 
     void searchUser() {
-        System.out.println("\n=====SEARCH USER=====");
-        System.out.println("1. Search by userID");
-        System.out.println("2. Search by Username");
+        System.out.println("\n╔══════════════════════╗");
+        System.out.println("║       SEARCH USER    ║");
+        System.out.println("╠══════════════════════╣");
+        System.out.println("║ 1  Search by User ID ║");
+        System.out.println("║ 2 Search by Username ║");
+        System.out.println("╚══════════════════════╝");
         while (true) {
             System.out.print("Answer: ");
             if (input.hasNextInt()) {
