@@ -241,17 +241,29 @@ public class UserController {
             System.out.println("\nYou haven't block anyone yet!");
             return false;
         } else {
-            System.out.println("\nBlocked User:");
-            for (int id : user.getBlockedUsersList()) {
+            System.out.println("\n=================================");
+            System.out.println("|       BLOCKED USERS LIST       |");
+            System.out.println("=================================");
+            System.out.printf("| %-5s | %-20s |\n", "ID", "Username");
+            System.out.println("---------------------------------");
+        
+            List<Integer> blockedUsers = user.getBlockedUsersList();
+        
+            if (blockedUsers.isEmpty()) {
+                System.out.println("|        No blocked users        |");
+            } else {
                 for (UserModel u : userList) {
-                    if (u.getUserID() == id) {
-                        userView.displayUser(u);
-                        System.out.println();
+                    if (blockedUsers.contains(u.getUserID())) {
+                        System.out.printf("| %-5d | %-20s |\n", u.getUserID(), u.getUserName());
                     }
                 }
             }
+        
+            System.out.println("=================================");
+            
             return true;
         }
+        
     }
 
     void storeUserData() {
