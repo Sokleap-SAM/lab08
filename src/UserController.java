@@ -99,20 +99,27 @@ public class UserController {
     }
 
     void displayAllUsers() {
-        System.out.println("\nUsers: ");
+        System.out.println("\n╔══════════════════════════════════╗");
+        System.out.println("║           USER LIST              ║");
+        System.out.println("╠════╦═══════╦═════════════════════╣");
+        System.out.println("║ ID │ Age   │ Name                ║");
+        System.out.println("╠════╬═══════╬═════════════════════╣");
+    
         for (UserModel u : userList) {
-            userView.displayUser(u);
-            if (user.getUserID() == u.getUserID()) {
-                System.out.print(" (ME)");
-            }
-            System.out.println("");
+            String meTag = (user.getUserID() == u.getUserID()) ? " (ME)" : "";
+            System.out.printf("║ %-2d │ %-5d │ %-20s║\n", u.getUserID(), u.getUserAge(), u.getUserName() + meTag);
         }
+    
+        System.out.println("╚════╩═══════╩═════════════════════╝");
     }
 
     void searchUser() {
-        System.out.println("\n=====SEARCH USER=====");
-        System.out.println("1. Search by userID");
-        System.out.println("2. Search by Username");
+        System.out.println("\n╔══════════════════════╗");
+        System.out.println("║       SEARCH USER    ║");
+        System.out.println("╠══════════════════════╣");
+        System.out.println("║ 1  Search by User ID ║");
+        System.out.println("║ 2 Search by Username ║");
+        System.out.println("╚══════════════════════╝");
         while (true) {
             System.out.print("Answer: ");
             if (input.hasNextInt()) {
@@ -234,17 +241,29 @@ public class UserController {
             System.out.println("\nYou haven't block anyone yet!");
             return false;
         } else {
-            System.out.println("\nBlocked User:");
-            for (int id : user.getBlockedUsersList()) {
+            System.out.println("\n=================================");
+            System.out.println("|       BLOCKED USERS LIST       |");
+            System.out.println("=================================");
+            System.out.printf("| %-5s | %-20s |\n", "ID", "Username");
+            System.out.println("---------------------------------");
+        
+            List<Integer> blockedUsers = user.getBlockedUsersList();
+        
+            if (blockedUsers.isEmpty()) {
+                System.out.println("|        No blocked users        |");
+            } else {
                 for (UserModel u : userList) {
-                    if (u.getUserID() == id) {
-                        userView.displayUser(u);
-                        System.out.println();
+                    if (blockedUsers.contains(u.getUserID())) {
+                        System.out.printf("| %-5d | %-20s |\n", u.getUserID(), u.getUserName());
                     }
                 }
             }
+        
+            System.out.println("=================================");
+            
             return true;
         }
+        
     }
 
     void storeUserData() {
