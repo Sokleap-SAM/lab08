@@ -68,10 +68,9 @@ public class ChatServer {
     // Login a user
     public static boolean loginUser(String username, String password) {
         String lowercaseUsername = username.toLowerCase(); // Convert username to lowercase
-        return registeredUsers.containsKey(lowercaseUsername) && registeredUsers.get(lowercaseUsername).equals(password);
+        return registeredUsers.containsKey(lowercaseUsername)
+                && registeredUsers.get(lowercaseUsername).equals(password);
     }
-
-
 
     // Load user status from file
     private static void loadUserStatus() {
@@ -148,12 +147,35 @@ public class ChatServer {
 
     // Save chat history to file
     private static void saveChatHistory(String sender, String recipient, String message) {
-        String fileName = sender + "_" + recipient + ".txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(sender + ": " + message);
-            writer.newLine();
+        String fileName1 = sender.toLowerCase() + "_" + recipient.toLowerCase() + ".txt";
+        String fileName2 = recipient.toLowerCase() + "_" + sender.toLowerCase() + ".txt";
+
+        // Check which file exists
+        File file1 = new File(fileName1);
+        File file2 = new File(fileName2);
+
+        try {
+            if (file1.exists()) {
+                // Append to file1
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file1, true))) {
+                    writer.write(sender + ": " + message);
+                    writer.newLine();
+                }
+            } else if (file2.exists()) {
+                // Append to file2
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file2, true))) {
+                    writer.write(sender + ": " + message);
+                    writer.newLine();
+                }
+            } else {
+                // Create a new file (file1)
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file1, true))) {
+                    writer.write(sender + ": " + message);
+                    writer.newLine();
+                }
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error saving chat history.");
         }
     }
 
@@ -246,6 +268,16 @@ public class ChatServer {
         }
     }
 
+    public static void showGuide(String clientName) {
+        for (ClientHandler client : clients) {
+            if (client.getClientName().equals(clientName)) {
+                client.sendMessage(
+                        "Guide: \n1. To chat: Type '/chat <username> message\n2. To block: Type '/block <username>'\n3. To unblock: Type '/unblock <username>'\n4. To view chat history: Type '/history <username>'' 5. To show guide: Type '/help'");
+                break;
+            }
+        }
+    }
+
     // Notify blocked message
     public static void notifyBlockedMessage(String sender, String recipient) {
         for (ClientHandler client : clients) {
@@ -280,6 +312,39 @@ public class ChatServer {
     public static void removeClient(ClientHandler client) {
         clients.remove(client);
         broadcastClientList();
+    }
+
+    public static String getChatHistory(String user1, String user2) {
+        String fileName1 = user1.toLowerCase() + "_" + user2.toLowerCase() + ".txt";
+        String fileName2 = user2.toLowerCase() + "_" + user1.toLowerCase() + ".txt";
+        StringBuilder history = new StringBuilder();
+
+        try {
+            File file1 = new File(fileName1);
+            File file2 = new File(fileName2);
+
+            if (file1.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        history.append(line).append("\n");
+                    }
+                }
+            } else if (file2.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        history.append(line).append("\n");
+                    }
+                }
+            } else {
+                history.append("No chat history found.");
+            }
+        } catch (IOException e) {
+            history.append("Error reading chat history.");
+        }
+
+        return history.toString();
     }
 
     // Client handler class
@@ -364,6 +429,13 @@ public class ChatServer {
                         String[] parts = inputLine.split(" ", 2);
                         String unblockedClient = parts[1];
                         unblockClient(clientName, unblockedClient);
+                    } else if (inputLine.startsWith("/history ")) {
+                        String[] parts = inputLine.split(" ", 2);
+                        String otherUser = parts[1];
+                        String history = getChatHistory(clientName, otherUser);
+                        out.println("CHAT_HISTORY:" + history);
+                    } else if (inputLine.equals("/help")) {
+                        showGuide(clientName);
                     }
                 }
             } catch (IOException e) {

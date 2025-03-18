@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.1.100"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
@@ -127,8 +127,14 @@ public class ChatClient {
                     String[] parts = input.split(" ", 2);
                     String unblockedClient = parts[1];
                     out.println("/unblock " + unblockedClient);
+                } else if (input.startsWith("/history ")) {
+                    String[] parts = input.split(" ", 2);
+                    String otherUser = parts[1];
+                    out.println("/history " + otherUser);
+                } else if (input.equals("/help")) {
+                    out.println("/help");
                 } else {
-                    System.out.println("Invalid command. Use /chat <recipient> <message>, /block <client>, or /unblock <client>");
+                    System.out.println("Please use '/help' for more info!");
                 }
             }
         } catch (Exception e) {
