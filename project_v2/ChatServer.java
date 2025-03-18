@@ -268,16 +268,6 @@ public class ChatServer {
         }
     }
 
-    public static void showGuide(String clientName) {
-        for (ClientHandler client : clients) {
-            if (client.getClientName().equals(clientName)) {
-                client.sendMessage(
-                        "Guide: \n1. To chat: Type '/chat <username> message\n2. To block: Type '/block <username>'\n3. To unblock: Type '/unblock <username>'\n4. To view chat history: Type '/history <username>'' 5. To show guide: Type '/help'");
-                break;
-            }
-        }
-    }
-
     // Notify blocked message
     public static void notifyBlockedMessage(String sender, String recipient) {
         for (ClientHandler client : clients) {
@@ -434,9 +424,7 @@ public class ChatServer {
                         String otherUser = parts[1];
                         String history = getChatHistory(clientName, otherUser);
                         out.println("CHAT_HISTORY:" + history);
-                    } else if (inputLine.equals("/help")) {
-                        showGuide(clientName);
-                    }
+                    } 
                 }
             } catch (IOException e) {
                 e.printStackTrace();

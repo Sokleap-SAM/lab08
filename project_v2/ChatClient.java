@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.242.159"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
@@ -17,11 +17,40 @@ public class ChatClient {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
+            System.out.println("\r\n" + //
+                    "                         /$$                                                     /$$                                                                   /$$                   /$$    \r\n"
+                    + //
+                    "                        | $$                                                    | $$                                                                  | $$                  | $$    \r\n"
+                    + //
+                    " /$$  /$$  /$$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$        /$$$$$$    /$$$$$$         /$$$$$$  /$$   /$$  /$$$$$$         /$$$$$$$| $$$$$$$   /$$$$$$  /$$$$$$  \r\n"
+                    + //
+                    "| $$ | $$ | $$ /$$__  $$| $$ /$$_____/ /$$__  $$| $$_  $$_  $$ /$$__  $$      |_  $$_/   /$$__  $$       /$$__  $$| $$  | $$ /$$__  $$       /$$_____/| $$__  $$ |____  $$|_  $$_/  \r\n"
+                    + //
+                    "| $$ | $$ | $$| $$$$$$$$| $$| $$      | $$  \\ $$| $$ \\ $$ \\ $$| $$$$$$$$        | $$    | $$  \\ $$      | $$  \\ $$| $$  | $$| $$  \\__/      | $$      | $$  \\ $$  /$$$$$$$  | $$    \r\n"
+                    + //
+                    "| $$ | $$ | $$| $$_____/| $$| $$      | $$  | $$| $$ | $$ | $$| $$_____/        | $$ /$$| $$  | $$      | $$  | $$| $$  | $$| $$            | $$      | $$  | $$ /$$__  $$  | $$ /$$\r\n"
+                    + //
+                    "|  $$$$$/$$$$/|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$        |  $$$$/|  $$$$$$/      |  $$$$$$/|  $$$$$$/| $$            |  $$$$$$$| $$  | $$|  $$$$$$$  |  $$$$/\r\n"
+                    + //
+                    " \\_____/\\___/  \\_______/|__/ \\_______/ \\______/ |__/ |__/ |__/ \\_______/         \\___/   \\______/        \\______/  \\______/ |__/             \\_______/|__/  |__/ \\_______/   \\___/  \r\n"
+                    + //
+                    "                                                                                                                                                                                    \r\n"
+                    + //
+                    "                                                                                                                                                                                    \r\n"
+                    + //
+                    "                                                                                                                                                                                    \r\n"
+                    + //
+                    "");
             // Display menu
-            System.out.println("1. Register");
-            System.out.println("2. Login");
-            System.out.println("3. Exit");
+            System.out.println("\n╔═══════════════════════╗");
+            System.out.println("║       MAIN MENU       ║");
+            System.out.println("╠═══════════════════════╣");
+            System.out.println("║ 1.   Register         ║");
+            System.out.println("║ 2.   Login            ║");
+            System.out.println("║ 3.   Exit             ║");
+            System.out.println("╚═══════════════════════╝");
             System.out.print("Option: ");
+
             String option = scanner.nextLine();
 
             switch (option) {
@@ -91,7 +120,10 @@ public class ChatClient {
             String response = in.readLine();
             if (response.startsWith("SUCCESS:")) {
                 System.out.println(response.substring(8));
-                this.clientName = username.toLowerCase(); // Store username in lowercase
+                this.clientName = username.toLowerCase();
+                System.out.println(
+                        "Guide: \n1. To chat: Type '/chat <username> message\n2. To block: Type '/block <username>'\n3. To unblock: Type '/unblock <username>'\n4. To view chat history: Type '/history <username>'' 5. To show guide: Type '/help'");
+                // Store username in lowercase
                 return true; // Login successful
             } else if (response.startsWith("ERROR:")) {
                 System.out.println(response.substring(6));
@@ -132,7 +164,13 @@ public class ChatClient {
                     String otherUser = parts[1];
                     out.println("/history " + otherUser);
                 } else if (input.equals("/help")) {
-                    out.println("/help");
+                    System.out.println("===== Help Guide =====");
+                    System.out.println("/chat <recipient> <message> - Send a private message to a recipient.");
+                    System.out.println("/block <username> - Block a user from sending you messages.");
+                    System.out.println("/unblock <username> - Unblock a user.");
+                    System.out.println("/history <username> - View chat history with a user.");
+                    System.out.println("/help - Display this help guide.");
+                    System.out.println("=====================");
                 } else {
                     System.out.println("Please use '/help' for more info!");
                 }
