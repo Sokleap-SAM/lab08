@@ -5,8 +5,8 @@
 # User manual  
 ## Team 2:  
 members:  
--SAM Sokleap
--KHEANG Ann
+-SAM Sokleap  
+-KHEANG Ann  
 ## Introduction:  
 Welcome to our chat application, a simple chat application designed to connect you with your friends, family, and colleagues. This application allows you to send and receive messages. This manual will guide you through the process of using ChatSphere, from account creation to troubleshooting common issues.  
 ## Getting Started: Account Creation and Login:  
