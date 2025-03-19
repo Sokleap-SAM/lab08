@@ -150,6 +150,7 @@ public class ChatClient {
                 System.out.println("║ /unblock <user>      │ Unblock a user ║");
                 System.out.println("║ /history <user>      │ View history   ║");
                 System.out.println("║ /help                │ Show this menu ║");
+                System.out.println("║ /logout              │ back to menu   ║");
                 System.out.println("╚═══════════════════════════════════════╝");
                 return true; // Login successful
             } else if (response.startsWith("ERROR:")) {
@@ -204,14 +205,18 @@ public class ChatClient {
                     String otherUser = parts[1];
                     out.println("/history " + otherUser);
                 } else if (input.equals("/help")) {
-                    System.out.println("\n\0xBA===== Help Guide =====");
-                    System.out.println("Type /chat <recipient> <message> - To send a private message to a recipient.");
-                    System.out.println("Type /block <username> - To block a user from sending you messages.");
-                    System.out.println("Type /unblock <username> - To unblock a user.");
-                    System.out.println("Type /history <username> - To view chat history with a user.");
-                    System.out.println("Type /help - To display this help guide.");
-                    System.out.println("Type /logout -To log out and return to the main menu.");
-                    System.out.println("=====================\n");
+                    System.out.println("╔═══════════════════════════════════════╗");
+                    System.out.println("║              HELP GUIDE               ║");
+                    System.out.println("╠═══════════════════════════════════════╣");
+                    System.out.println("║ Command              │ Description    ║");
+                    System.out.println("╠══════════════════════╪════════════════╣");
+                    System.out.println("║ /chat <user> <msg>   │ Send a message ║");
+                    System.out.println("║ /block <user>        │ Block a user   ║");
+                    System.out.println("║ /unblock <user>      │ Unblock a user ║");
+                    System.out.println("║ /history <user>      │ View history   ║");
+                    System.out.println("║ /help                │ Show this menu ║");
+                    System.out.println("║ /logout              │ back to menu   ║");
+                    System.out.println("╚═══════════════════════════════════════╝");
                 } else if (input.equals("/logout")) {
                     System.out.println("Logging out...");
                     logout();
@@ -249,7 +254,9 @@ public class ChatClient {
                 } else if (message.startsWith("ERROR:")) {
                     System.out.println(message.substring(6));
                 } else if (message.startsWith("CHAT_HISTORY:")) {
+                    System.out.println("════════════════════════════════════════════");
                     System.out.println("Chat history:\n" + message.substring(13));
+                    System.out.println("════════════════════════════════════════════");
                 } 
             }
         } catch (IOException e) {
