@@ -178,32 +178,39 @@ public class ChatClient {
                     String[] parts = input.split(" ", 3);
                     if(parts.length < 3){
                         System.out.println("Invalid command!");
-                        return;
                     }
-                    String recipient = parts[1];
-                    String message = parts[2];
-                    out.println("PRIVATE_MSG:" + recipient + ":" + message);
+                    else{
+                        String recipient = parts[1];
+                        String message = parts[2];
+                        out.println("PRIVATE_MSG:" + recipient + ":" + message);
+                    }
                 } else if (input.startsWith("/block ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
                         System.out.println("Invalid command!");
                     }
-                    String blockedClient = parts[1];
-                    out.println("/block " + blockedClient);
+                    else{
+                        String blockedClient = parts[1];
+                        out.println("/block " + blockedClient);
+                    }
                 } else if (input.startsWith("/unblock ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
                         System.out.println("Invalid command!");
                     }
-                    String unblockedClient = parts[1];
-                    out.println("/unblock " + unblockedClient);
+                    else{
+                        String unblockedClient = parts[1];
+                        out.println("/unblock " + unblockedClient);
+                    }
                 } else if (input.startsWith("/history ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
                         System.out.println("Invalid command!");
                     }
-                    String otherUser = parts[1];
-                    out.println("/history " + otherUser);
+                    else{
+                        String otherUser = parts[1];
+                        out.println("/history " + otherUser);
+                    }
                 } else if (input.equals("/help")) {
                     System.out.println("╔═══════════════════════════════════════╗");
                     System.out.println("║              HELP GUIDE               ║");
