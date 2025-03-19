@@ -11,6 +11,7 @@ public class ChatClient {
     private String clientName;
 
     public ChatClient() {
+
     }
 
     public void start() {
@@ -50,25 +51,43 @@ public class ChatClient {
             System.out.println("║ 3.   Exit             ║");
             System.out.println("╚═══════════════════════╝");
             System.out.print("Option: ");
+            if (scanner.hasNextInt()) {
+                String option = scanner.nextLine();
 
-            String option = scanner.nextLine();
-
-            switch (option) {
-                case "1":
-                    registerUser(scanner);
-                    break;
-                case "2":
-                    if (loginUser(scanner)) {
-                        enterChat();
-                        return; // Exit the menu and start chatting
-                    }
-                    break;
-                case "3":
-                    System.out.println("Exiting...");
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                switch (option) {
+                    case "1":
+                        registerUser(scanner);
+                        break;
+                    case "2":
+                        if (loginUser(scanner)) {
+                            enterChat();
+                            return; // Exit the menu and start chatting
+                        }
+                        break;
+                    case "3":
+                    System.out.println("\r\n" + //
+                    " ________ __                            __                                                   ______                                              __                                                                                               __                             \r\n" + //
+                    "/        /  |                          /  |                                                 /      \\                                            /  |                                                                                             /  |                            \r\n" + //
+                    "$$$$$$$$/$$ |____    ______   _______  $$ |   __        __    __   ______   __    __       /$$$$$$  |_____    ______         __    __   _______ $$/  _______    ______          ______   __    __   ______          _______  __    __   _______ _$$ |_     ______   _____  ____  \r\n" + //
+                    "   $$ |  $$      \\  /      \\ /       \\ $$ |  /  |      /  |  /  | /      \\ /  |  /  |      $$ |_ $$/      \\  /      \\       /  |  /  | /       |/  |/       \\  /      \\        /      \\ /  |  /  | /      \\        /       |/  |  /  | /       / $$   |   /      \\ /     \\/    \\ \r\n" + //
+                    "   $$ |  $$$$$$$  | $$$$$$  |$$$$$$$  |$$ |_/$$/       $$ |  $$ |/$$$$$$  |$$ |  $$ |      $$   | /$$$$$$  |/$$$$$$  |      $$ |  $$ |/$$$$$$$/ $$ |$$$$$$$  |/$$$$$$  |      /$$$$$$  |$$ |  $$ |/$$$$$$  |      /$$$$$$$/ $$ |  $$ |/$$$$$$$/$$$$$$/   /$$$$$$  |$$$$$$ $$$$  |\r\n" + //
+                    "   $$ |  $$ |  $$ | /    $$ |$$ |  $$ |$$   $$<        $$ |  $$ |$$ |  $$ |$$ |  $$ |      $$$$/  $$ |  $$ |$$ |  $$/       $$ |  $$ |$$      \\ $$ |$$ |  $$ |$$ |  $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$/       $$      \\ $$ |  $$ |$$      \\  $$ | __ $$    $$ |$$ | $$ | $$ |\r\n" + //
+                    "   $$ |  $$ |  $$ |/$$$$$$$ |$$ |  $$ |$$$$$$  \\       $$ \\__$$ |$$ \\__$$ |$$ \\__$$ |      $$ |   $$ \\__$$ |$$ |            $$ \\__$$ | $$$$$$  |$$ |$$ |  $$ |$$ \\__$$ |      $$ \\__$$ |$$ \\__$$ |$$ |             $$$$$$  |$$ \\__$$ | $$$$$$  | $$ |/  |$$$$$$$$/ $$ | $$ | $$ |\r\n" + //
+                    "   $$ |  $$ |  $$ |$$    $$ |$$ |  $$ |$$ | $$  |      $$    $$ |$$    $$/ $$    $$/       $$ |   $$    $$/ $$ |            $$    $$/ /     $$/ $$ |$$ |  $$ |$$    $$ |      $$    $$/ $$    $$/ $$ |            /     $$/ $$    $$ |/     $$/  $$  $$/ $$       |$$ | $$ | $$ |\r\n" + //
+                    "   $$/   $$/   $$/  $$$$$$$/ $$/   $$/ $$/   $$/        $$$$$$$ | $$$$$$/   $$$$$$/        $$/     $$$$$$/  $$/              $$$$$$/  $$$$$$$/  $$/ $$/   $$/  $$$$$$$ |       $$$$$$/   $$$$$$/  $$/             $$$$$$$/   $$$$$$$ |$$$$$$$/    $$$$/   $$$$$$$/ $$/  $$/  $$/ \r\n" + //
+                    "                                                       /  \\__$$ |                                                                                             /  \\__$$ |                                                    /  \\__$$ |                                           \r\n" + //
+                    "                                                       $$    $$/                                                                                              $$    $$/                                                     $$    $$/                                            \r\n" + //
+                    "                                                        $$$$$$/                                                                                                $$$$$$/                                                       $$$$$$/                                             \r\n" + //
+                    "");
+                        System.exit(0);
+                        return;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
+            } else {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.next();
             }
         }
     }
@@ -121,9 +140,14 @@ public class ChatClient {
             if (response.startsWith("SUCCESS:")) {
                 System.out.println(response.substring(8));
                 this.clientName = username.toLowerCase();
-                System.out.println(
-                        "Guide: \n1. To chat: Type '/chat <username> message\n2. To block: Type '/block <username>'\n3. To unblock: Type '/unblock <username>'\n4. To view chat history: Type '/history <username>'' 5. To show guide: Type '/help'");
-                // Store username in lowercase
+                System.out.println("\n===== Help Guide =====");
+                System.out.println("/chat <recipient> <message> - Send a private message to a recipient.");
+                System.out.println("/block <username> - Block a user from sending you messages.");
+                System.out.println("/unblock <username> - Unblock a user.");
+                System.out.println("/history <username> - View chat history with a user.");
+                System.out.println("/help - Display this help guide.");
+                System.out.println("/logout - Log out and return to the main menu.");
+                System.out.println("=====================\n");
                 return true; // Login successful
             } else if (response.startsWith("ERROR:")) {
                 System.out.println(response.substring(6));
@@ -148,29 +172,47 @@ public class ChatClient {
                 String input = scanner.nextLine();
                 if (input.startsWith("/chat ")) {
                     String[] parts = input.split(" ", 3);
+                    if(parts.length < 3){
+                        System.out.println("Invalid command!");
+                        return;
+                    }
                     String recipient = parts[1];
                     String message = parts[2];
                     out.println("PRIVATE_MSG:" + recipient + ":" + message);
                 } else if (input.startsWith("/block ")) {
                     String[] parts = input.split(" ", 2);
+                    if(parts.length < 2){
+                        System.out.println("Invalid command!");
+                    }
                     String blockedClient = parts[1];
                     out.println("/block " + blockedClient);
                 } else if (input.startsWith("/unblock ")) {
                     String[] parts = input.split(" ", 2);
+                    if(parts.length < 2){
+                        System.out.println("Invalid command!");
+                    }
                     String unblockedClient = parts[1];
                     out.println("/unblock " + unblockedClient);
                 } else if (input.startsWith("/history ")) {
                     String[] parts = input.split(" ", 2);
+                    if(parts.length < 2){
+                        System.out.println("Invalid command!");
+                    }
                     String otherUser = parts[1];
                     out.println("/history " + otherUser);
                 } else if (input.equals("/help")) {
-                    System.out.println("===== Help Guide =====");
-                    System.out.println("/chat <recipient> <message> - Send a private message to a recipient.");
-                    System.out.println("/block <username> - Block a user from sending you messages.");
-                    System.out.println("/unblock <username> - Unblock a user.");
-                    System.out.println("/history <username> - View chat history with a user.");
-                    System.out.println("/help - Display this help guide.");
-                    System.out.println("=====================");
+                    System.out.println("\n\0xBA===== Help Guide =====");
+                    System.out.println("Type /chat <recipient> <message> - To send a private message to a recipient.");
+                    System.out.println("Type /block <username> - To block a user from sending you messages.");
+                    System.out.println("Type /unblock <username> - To unblock a user.");
+                    System.out.println("Type /history <username> - To view chat history with a user.");
+                    System.out.println("Type /help - To display this help guide.");
+                    System.out.println("Type /logout -To log out and return to the main menu.");
+                    System.out.println("=====================\n");
+                } else if (input.equals("/logout")) {
+                    System.out.println("Logging out...");
+                    logout();
+                    return;
                 } else {
                     System.out.println("Please use '/help' for more info!");
                 }
@@ -203,11 +245,24 @@ public class ChatClient {
                     System.out.println(message.substring(5));
                 } else if (message.startsWith("ERROR:")) {
                     System.out.println(message.substring(6));
-                }
+                } else if (message.startsWith("CHAT_HISTORY:")) {
+                    System.out.println("Chat history:\n" + message.substring(13));
+                } 
             }
         } catch (IOException e) {
             System.out.println("Disconnected from the server.");
         }
+    }
+
+    private void logout() {
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close(); // Close the socket
+            }
+        } catch (IOException e) {
+            System.out.println("Error closing the socket.");
+        }
+        start(); // Return to the main menu
     }
 
     public static void main(String[] args) {
