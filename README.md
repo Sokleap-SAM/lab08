@@ -9,6 +9,9 @@ members:
 -KHEANG Ann  
 ## Introduction:  
 Welcome to our chat application, a simple chat application designed to connect you with your friends, family, and colleagues. This application allows you to send and receive messages. This manual will guide you through the process of using ChatSphere, from account creation to troubleshooting common issues.  
+## Unit tests
+1.Yes, my project was completed successfully.
+1.1 
 ## Getting Started: Account Creation and Login:  
 1. Clone and Run the ChatServer.java on your device to host the server.   
 2. Clone and Run the ChatClient.java on your device, and other users that you want to communicate with. 
