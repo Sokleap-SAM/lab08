@@ -54,6 +54,34 @@ public class ChatServer {
         }
     }
 
+    private static boolean isUserBlocked(String username, String blockedUser) {
+        try {
+            File file = new File(USER_STATUS_FILE);
+            if (!file.exists()) {
+                return false; // File doesn't exist, so no blocks
+            }
+    
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts[0].equals(username)) {
+                        // Check if the blockedUser is in the list
+                        for (int i = 1; i < parts.length; i++) {
+                            if (parts[i].equals(blockedUser)) {
+                                return true; // User is blocked
+                            }
+                        }
+                        break; // No need to check further lines for this user
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false; // User is not blocked
+    }
+
     // Register a new user
     public static boolean registerUser(String username, String password) {
         String lowercaseUsername = username.toLowerCase(); // Convert username to lowercase
@@ -229,18 +257,26 @@ public class ChatServer {
             return;
         }
 
-        for (ClientHandler client : clients) {
-            if (client.getClientName().equals(blocker)) {
-                client.addblockClient(blocked);
-                client.sendMessage("SUCCESS:You have blocked " + blocked);
-                saveUserStatus(blocker, blocked, true); // Save user status
-                break;
+        if(isUserBlocked(blocker, blocked)){
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(blocker)) {
+                    client.addblockClient(blocked);
+                    client.sendMessage("SUCCESS:You have blocked " + blocked);
+                    saveUserStatus(blocker, blocked, true); // Save user status
+                    break;
+                }
             }
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(blocked)) {
+                    client.sendMessage("INFO:" + blocker + " has blocked you.");
+                    break;
+                }
+            }
+            return;
         }
         for (ClientHandler client : clients) {
-            if (client.getClientName().equals(blocked)) {
-                client.sendMessage("INFO:" + blocker + " has blocked you.");
-                break;
+            if (client.getClientName().equals(blocker)) {
+                client.sendMessage("INFO:" + blocked + " is not exist");
             }
         }
     }
@@ -251,19 +287,26 @@ public class ChatServer {
             notifySelfBlockError(unblocker);
             return;
         }
-
-        for (ClientHandler client : clients) {
-            if (client.getClientName().equals(unblocker)) {
-                client.removeblockClient(unblocked);
-                client.sendMessage("SUCCESS:You have unblocked " + unblocked);
-                saveUserStatus(unblocker, unblocked, false); // Update user status
-                break;
+        else if(isUserBlocked(unblocker, unblocked)){
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(unblocker)) {
+                    client.removeblockClient(unblocked);
+                    client.sendMessage("SUCCESS:You have unblocked " + unblocked);
+                    saveUserStatus(unblocker, unblocked, false); // Update user status
+                    break;
+                }
             }
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(unblocked)) {
+                    client.sendMessage("INFO:" + unblocker + " has unblocked you.");
+                    break;
+                }
+            }
+            return;
         }
         for (ClientHandler client : clients) {
-            if (client.getClientName().equals(unblocked)) {
-                client.sendMessage("INFO:" + unblocker + " has unblocked you.");
-                break;
+            if (client.getClientName().equals(unblocker)) {
+                client.sendMessage("INFO:You didn't block" + unblocked + " or " + unblocked + " is not exist");
             }
         }
     }

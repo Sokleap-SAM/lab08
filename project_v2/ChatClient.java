@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.242.159"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
@@ -255,11 +255,11 @@ public class ChatClient {
                     String msg = parts[2];
                     System.out.println("[Private from " + sender + "]: " + msg);
                 } else if (message.startsWith("SUCCESS:")) {
-                    System.out.println(message.substring(8));
+                    System.out.println("INFO: " + message.substring(8) + "Successfully");
                 } else if (message.startsWith("INFO:")) {
-                    System.out.println(message.substring(5));
+                    System.out.println("INFO: " + message.substring(5));
                 } else if (message.startsWith("ERROR:")) {
-                    System.out.println(message.substring(6));
+                    System.out.println("INFO: " + message.substring(6));
                 } else if (message.startsWith("CHAT_HISTORY:")) {
                     System.out.println("════════════════════════════════════════════");
                     System.out.println("Chat history:\n" + message.substring(13));
