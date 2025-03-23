@@ -60,7 +60,7 @@ public class ChatServer {
             if (!file.exists()) {
                 return false; // File doesn't exist, so no blocks
             }
-    
+
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -256,29 +256,21 @@ public class ChatServer {
             notifySelfBlockError(blocker);
             return;
         }
-
-        if(isUserBlocked(blocker, blocked)){
-            for (ClientHandler client : clients) {
-                if (client.getClientName().equals(blocker)) {
-                    client.addblockClient(blocked);
-                    client.sendMessage("SUCCESS:You have blocked " + blocked);
-                    saveUserStatus(blocker, blocked, true); // Save user status
-                    break;
-                }
-            }
-            for (ClientHandler client : clients) {
-                if (client.getClientName().equals(blocked)) {
-                    client.sendMessage("INFO:" + blocker + " has blocked you.");
-                    break;
-                }
-            }
-            return;
-        }
         for (ClientHandler client : clients) {
             if (client.getClientName().equals(blocker)) {
-                client.sendMessage("INFO:" + blocked + " is not exist");
+                client.addblockClient(blocked);
+                client.sendMessage("SUCCESS:You have blocked " + blocked);
+                saveUserStatus(blocker, blocked, true); // Save user status
+                break;
             }
         }
+        for (ClientHandler client : clients) {
+            if (client.getClientName().equals(blocked)) {
+                client.sendMessage("INFO:" + blocker + " has blocked you.");
+                break;
+            }
+        }
+        return;
     }
 
     // Unblock a client
@@ -286,8 +278,7 @@ public class ChatServer {
         if (unblocker.equals(unblocked)) {
             notifySelfBlockError(unblocker);
             return;
-        }
-        else if(isUserBlocked(unblocker, unblocked)){
+        } else if (isUserBlocked(unblocker, unblocked)) {
             for (ClientHandler client : clients) {
                 if (client.getClientName().equals(unblocker)) {
                     client.removeblockClient(unblocked);
@@ -362,6 +353,7 @@ public class ChatServer {
                     while ((line = reader.readLine()) != null) {
                         history.append(line).append("\n");
                     }
+                    reader.close();
                 }
             } else if (file2.exists()) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
@@ -369,6 +361,7 @@ public class ChatServer {
                     while ((line = reader.readLine()) != null) {
                         history.append(line).append("\n");
                     }
+                    reader.close();
                 }
             } else {
                 history.append("No chat history found.");
@@ -467,7 +460,7 @@ public class ChatServer {
                         String otherUser = parts[1];
                         String history = getChatHistory(clientName, otherUser);
                         out.println("CHAT_HISTORY:" + history);
-                    } 
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

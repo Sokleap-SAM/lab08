@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.1.219"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
