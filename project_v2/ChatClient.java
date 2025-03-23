@@ -169,7 +169,7 @@ public class ChatClient {
                 if (input.startsWith("/chat")) {
                     String[] parts = input.split(" ", 3);
                     if(parts.length < 3){
-                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + redColorCode);
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + resetColorCode);
                     }
                     else{
                         String recipient = parts[1];
@@ -179,7 +179,7 @@ public class ChatClient {
                 } else if (input.startsWith("/block ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
-                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + redColorCode);
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + resetColorCode);
                     }
                     else{
                         String blockedClient = parts[1];
@@ -188,7 +188,7 @@ public class ChatClient {
                 } else if (input.startsWith("/unblock ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
-                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + redColorCode);
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + resetColorCode);
                     }
                     else{
                         String unblockedClient = parts[1];
