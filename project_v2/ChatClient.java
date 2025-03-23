@@ -3,13 +3,19 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.1.243"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     private String clientName;
 
+    String pinkcolorcode = "\u001B[35m";
+    String GreenColorCode = "\u001B[32m";
+    String resetColorCode = "\u001B[0m";
+    String yellowColorCode = "\u001B[33m";
+    String blueColorCode = "\u001B[34m";
+    String pinkColorCode = "\u001B[35m";
     public ChatClient() {
 
     }
@@ -18,38 +24,25 @@ public class ChatClient {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\r\n" + //
-                    "                         /$$                                                     /$$                                                                   /$$                   /$$    \r\n"
-                    + //
-                    "                        | $$                                                    | $$                                                                  | $$                  | $$    \r\n"
-                    + //
-                    " /$$  /$$  /$$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$        /$$$$$$    /$$$$$$         /$$$$$$  /$$   /$$  /$$$$$$         /$$$$$$$| $$$$$$$   /$$$$$$  /$$$$$$  \r\n"
-                    + //
-                    "| $$ | $$ | $$ /$$__  $$| $$ /$$_____/ /$$__  $$| $$_  $$_  $$ /$$__  $$      |_  $$_/   /$$__  $$       /$$__  $$| $$  | $$ /$$__  $$       /$$_____/| $$__  $$ |____  $$|_  $$_/  \r\n"
-                    + //
-                    "| $$ | $$ | $$| $$$$$$$$| $$| $$      | $$  \\ $$| $$ \\ $$ \\ $$| $$$$$$$$        | $$    | $$  \\ $$      | $$  \\ $$| $$  | $$| $$  \\__/      | $$      | $$  \\ $$  /$$$$$$$  | $$    \r\n"
-                    + //
-                    "| $$ | $$ | $$| $$_____/| $$| $$      | $$  | $$| $$ | $$ | $$| $$_____/        | $$ /$$| $$  | $$      | $$  | $$| $$  | $$| $$            | $$      | $$  | $$ /$$__  $$  | $$ /$$\r\n"
-                    + //
-                    "|  $$$$$/$$$$/|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$        |  $$$$/|  $$$$$$/      |  $$$$$$/|  $$$$$$/| $$            |  $$$$$$$| $$  | $$|  $$$$$$$  |  $$$$/\r\n"
-                    + //
-                    " \\_____/\\___/  \\_______/|__/ \\_______/ \\______/ |__/ |__/ |__/ \\_______/         \\___/   \\______/        \\______/  \\______/ |__/             \\_______/|__/  |__/ \\_______/   \\___/  \r\n"
-                    + //
-                    "                                                                                                                                                                                    \r\n"
-                    + //
-                    "                                                                                                                                                                                    \r\n"
-                    + //
-                    "                                                                                                                                                                                    \r\n"
-                    + //
-                    "");
+    System.out.println(GreenColorCode + 
+        "                         /$$                                                     /$$                                                                   /$$                   /$$    \r\n"
+        + "                        | $$                                                    | $$                                                                  | $$                  | $$    \r\n"
+        + " /$$  /$$  /$$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$        /$$$$$$    /$$$$$$         /$$$$$$  /$$   /$$  /$$$$$$         /$$$$$$$| $$$$$$$   /$$$$$$  /$$$$$$  \r\n"
+        + "| $$ | $$ | $$ /$$__  $$| $$ /$$_____/ /$$__  $$| $$_  $$_  $$ /$$__  $$      |_  $$_/   /$$__  $$       /$$__  $$| $$  | $$ /$$__  $$       /$$_____/| $$__  $$ |____  $$|_  $$_/  \r\n"
+        + "| $$ | $$ | $$| $$$$$$$$| $$| $$      | $$  \\ $$| $$ \\ $$ \\ $$| $$$$$$$$        | $$    | $$  \\ $$      | $$  \\ $$| $$  | $$| $$  \\__/      | $$      | $$  \\ $$  /$$$$$$$  | $$    \r\n"
+        + "| $$ | $$ | $$| $$_____/| $$| $$      | $$  | $$| $$ | $$ | $$| $$_____/        | $$ /$$| $$  | $$      | $$  | $$| $$  | $$| $$            | $$      | $$  | $$ /$$__  $$  | $$ /$$\r\n"
+        + "|  $$$$$/$$$$/|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$        |  $$$$/|  $$$$$$/      |  $$$$$$/|  $$$$$$/| $$            |  $$$$$$$| $$  | $$|  $$$$$$$  |  $$$$/\r\n"
+        + " \\_____/\\___/  \\_______/|__/ \\_______/ \\______/ |__/ |__/ |__/ \\_______/         \\___/   \\______/        \\______/  \\______/ |__/             \\_______/|__/  |__/ \\_______/   \\___/  \r\n"
+        + "                                                                                                                                                                                    \r\n"
+        + resetColorCode);
             // Display menu
-            System.out.println("\n╔═══════════════════════╗");
+            System.out.println(yellowColorCode + "\n╔═══════════════════════╗");
             System.out.println("║       MAIN MENU       ║");
             System.out.println("╠═══════════════════════╣");
             System.out.println("║ 1.   Register         ║");
             System.out.println("║ 2.   Login            ║");
             System.out.println("║ 3.   Exit             ║");
-            System.out.println("╚═══════════════════════╝");
+            System.out.println("╚═══════════════════════╝" + resetColorCode);
             System.out.print("Option: ");
             if (scanner.hasNextInt()) {
                 String option = scanner.nextLine();
@@ -65,7 +58,7 @@ public class ChatClient {
                         }
                         break;
                     case "3":
-                    System.out.println("\r\n" + //
+                    System.out.println(pinkcolorcode +
                     " ________ __                            __                                                   ______                                              __                                                                                               __                             \r\n" + //
                     "/        /  |                          /  |                                                 /      \\                                            /  |                                                                                             /  |                            \r\n" + //
                     "$$$$$$$$/$$ |____    ______   _______  $$ |   __        __    __   ______   __    __       /$$$$$$  |_____    ______         __    __   _______ $$/  _______    ______          ______   __    __   ______          _______  __    __   _______ _$$ |_     ______   _____  ____  \r\n" + //
@@ -78,7 +71,7 @@ public class ChatClient {
                     "                                                       /  \\__$$ |                                                                                             /  \\__$$ |                                                    /  \\__$$ |                                           \r\n" + //
                     "                                                       $$    $$/                                                                                              $$    $$/                                                     $$    $$/                                            \r\n" + //
                     "                                                        $$$$$$/                                                                                                $$$$$$/                                                       $$$$$$/                                             \r\n" + //
-                    "");
+                    "" + resetColorCode);
                         System.exit(0);
                         return;
                     default:
@@ -140,7 +133,7 @@ public class ChatClient {
             if (response.startsWith("SUCCESS:")) {
                 System.out.println(response.substring(8));
                 this.clientName = username.toLowerCase();
-                System.out.println("╔═══════════════════════════════════════╗");
+                System.out.println(yellowColorCode+"╔═══════════════════════════════════════╗");
                 System.out.println("║              HELP GUIDE               ║");
                 System.out.println("╠═══════════════════════════════════════╣");
                 System.out.println("║ Command              │ Description    ║");
@@ -151,7 +144,7 @@ public class ChatClient {
                 System.out.println("║ /history <user>      │ View history   ║");
                 System.out.println("║ /help                │ Show this menu ║");
                 System.out.println("║ /logout              │ back to menu   ║");
-                System.out.println("╚═══════════════════════════════════════╝");
+                System.out.println("╚═══════════════════════════════════════╝" + resetColorCode);
                 return true; // Login successful
             } else if (response.startsWith("ERROR:")) {
                 System.out.println(response.substring(6));
@@ -212,7 +205,7 @@ public class ChatClient {
                         out.println("/history " + otherUser);
                     }
                 } else if (input.equals("/help")) {
-                    System.out.println("╔═══════════════════════════════════════╗");
+                    System.out.println(yellowColorCode+"╔═══════════════════════════════════════╗");
                     System.out.println("║              HELP GUIDE               ║");
                     System.out.println("╠═══════════════════════════════════════╣");
                     System.out.println("║ Command              │ Description    ║");
@@ -223,7 +216,7 @@ public class ChatClient {
                     System.out.println("║ /history <user>      │ View history   ║");
                     System.out.println("║ /help                │ Show this menu ║");
                     System.out.println("║ /logout              │ back to menu   ║");
-                    System.out.println("╚═══════════════════════════════════════╝");
+                    System.out.println("╚═══════════════════════════════════════╝"+ resetColorCode);
                 } else if (input.equals("/logout")) {
                     System.out.println("Logging out...");
                     logout();
@@ -261,9 +254,9 @@ public class ChatClient {
                 } else if (message.startsWith("ERROR:")) {
                     System.out.println("INFO: " + message.substring(6));
                 } else if (message.startsWith("CHAT_HISTORY:")) {
-                    System.out.println("════════════════════════════════════════════");
-                    System.out.println("Chat history:\n" + message.substring(13));
-                    System.out.println("════════════════════════════════════════════");
+                    System.out.println(blueColorCode +"════════════════════════════════════════════"+ resetColorCode);
+                    System.out.println("Chat history:\n" + pinkColorCode + message.substring(13) + resetColorCode);
+                    System.out.println(blueColorCode +"════════════════════════════════════════════" + resetColorCode);
                 } 
             }
         } catch (IOException e) {
