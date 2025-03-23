@@ -3,19 +3,19 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.1.219"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private String clientName;
 
-    String pinkcolorcode = "\u001B[35m";
-    String GreenColorCode = "\u001B[32m";
     String resetColorCode = "\u001B[0m";
     String yellowColorCode = "\u001B[33m";
     String blueColorCode = "\u001B[34m";
     String pinkColorCode = "\u001B[35m";
+    String redColorCode = "\u001B[31m";
+    String greenColorCode = "\u001B[32m";
+
     public ChatClient() {
 
     }
@@ -24,7 +24,7 @@ public class ChatClient {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-    System.out.println(GreenColorCode + 
+    System.out.println(pinkColorCode + 
         "                         /$$                                                     /$$                                                                   /$$                   /$$    \r\n"
         + "                        | $$                                                    | $$                                                                  | $$                  | $$    \r\n"
         + " /$$  /$$  /$$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$        /$$$$$$    /$$$$$$         /$$$$$$  /$$   /$$  /$$$$$$         /$$$$$$$| $$$$$$$   /$$$$$$  /$$$$$$  \r\n"
@@ -36,7 +36,7 @@ public class ChatClient {
         + "                                                                                                                                                                                    \r\n"
         + resetColorCode);
             // Display menu
-            System.out.println(yellowColorCode + "\n╔═══════════════════════╗");
+            System.out.println(blueColorCode + "\n╔═══════════════════════╗");
             System.out.println("║       MAIN MENU       ║");
             System.out.println("╠═══════════════════════╣");
             System.out.println("║ 1.   Register         ║");
@@ -58,7 +58,7 @@ public class ChatClient {
                         }
                         break;
                     case "3":
-                    System.out.println(pinkcolorcode +
+                    System.out.println(pinkColorCode +
                     " ________ __                            __                                                   ______                                              __                                                                                               __                             \r\n" + //
                     "/        /  |                          /  |                                                 /      \\                                            /  |                                                                                             /  |                            \r\n" + //
                     "$$$$$$$$/$$ |____    ______   _______  $$ |   __        __    __   ______   __    __       /$$$$$$  |_____    ______         __    __   _______ $$/  _______    ______          ______   __    __   ______          _______  __    __   _______ _$$ |_     ______   _____  ____  \r\n" + //
@@ -75,11 +75,11 @@ public class ChatClient {
                         System.exit(0);
                         return;
                     default:
-                        System.out.println("Invalid option. Please try again.");
+                        System.out.println(redColorCode + "Invalid option. Please try again!" + resetColorCode);
                         break;
                 }
             } else {
-                System.out.println("Invalid input! Please enter a number.");
+                System.out.println(redColorCode + "Invalid input! Please enter a number!" + resetColorCode);
                 scanner.next();
             }
         }
@@ -102,15 +102,15 @@ public class ChatClient {
 
             String response = in.readLine();
             if (response.startsWith("SUCCESS:")) {
-                System.out.println(response.substring(8));
+                System.out.println(greenColorCode + response.substring(8));
             } else if (response.startsWith("ERROR:")) {
-                System.out.println(response.substring(6));
+                System.out.println(resetColorCode + response.substring(6) + resetColorCode);
             }
 
             // Close the socket after registration
             socket.close();
         } catch (IOException e) {
-            System.out.println("Error connecting to the server. Please try again.");
+            System.out.println(resetColorCode + "Error connecting to the server! Please try again!" +  resetColorCode);
         }
     }
 
@@ -131,9 +131,8 @@ public class ChatClient {
 
             String response = in.readLine();
             if (response.startsWith("SUCCESS:")) {
-                System.out.println(response.substring(8));
-                this.clientName = username.toLowerCase();
-                System.out.println(yellowColorCode+"╔═══════════════════════════════════════╗");
+                System.out.println(greenColorCode + response.substring(8) + resetColorCode);
+                System.out.println(blueColorCode+"╔═══════════════════════════════════════╗");
                 System.out.println("║              HELP GUIDE               ║");
                 System.out.println("╠═══════════════════════════════════════╣");
                 System.out.println("║ Command              │ Description    ║");
@@ -147,13 +146,13 @@ public class ChatClient {
                 System.out.println("╚═══════════════════════════════════════╝" + resetColorCode);
                 return true; // Login successful
             } else if (response.startsWith("ERROR:")) {
-                System.out.println(response.substring(6));
+                System.out.println(redColorCode + response.substring(6) + redColorCode);
                 // Close the socket if login fails
                 socket.close();
-                return false; // Login failed
+                return false; 
             }
         } catch (IOException e) {
-            System.out.println("Error connecting to the server. Please try again.");
+            System.out.println(redColorCode + "Error connecting to the server. Please try again." + resetColorCode);
         }
         return false;
     }
@@ -167,45 +166,45 @@ public class ChatClient {
             Scanner scanner = new Scanner(System.in);
             while (true) {
                 String input = scanner.nextLine();
-                if (input.startsWith("/chat ")) {
+                if (input.startsWith("/chat")) {
                     String[] parts = input.split(" ", 3);
                     if(parts.length < 3){
-                        System.out.println("Invalid command!");
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + redColorCode);
                     }
                     else{
                         String recipient = parts[1];
                         String message = parts[2];
-                        out.println("PRIVATE_MSG:" + recipient + ":" + message);
+                        out.println("/chat:" + recipient + ":" + message);
                     }
                 } else if (input.startsWith("/block ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
-                        System.out.println("Invalid command!");
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + redColorCode);
                     }
                     else{
                         String blockedClient = parts[1];
-                        out.println("/block " + blockedClient);
+                        out.println("/block:" + blockedClient);
                     }
                 } else if (input.startsWith("/unblock ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
-                        System.out.println("Invalid command!");
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + redColorCode);
                     }
                     else{
                         String unblockedClient = parts[1];
-                        out.println("/unblock " + unblockedClient);
+                        out.println("/unblock:" + unblockedClient);
                     }
                 } else if (input.startsWith("/history ")) {
                     String[] parts = input.split(" ", 2);
                     if(parts.length < 2){
-                        System.out.println("Invalid command!");
+                        System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + resetColorCode);
                     }
                     else{
                         String otherUser = parts[1];
-                        out.println("/history " + otherUser);
+                        out.println("/history:" + otherUser);
                     }
                 } else if (input.equals("/help")) {
-                    System.out.println(yellowColorCode+"╔═══════════════════════════════════════╗");
+                    System.out.println(blueColorCode+"╔═══════════════════════════════════════╗");
                     System.out.println("║              HELP GUIDE               ║");
                     System.out.println("╠═══════════════════════════════════════╣");
                     System.out.println("║ Command              │ Description    ║");
@@ -218,21 +217,15 @@ public class ChatClient {
                     System.out.println("║ /logout              │ back to menu   ║");
                     System.out.println("╚═══════════════════════════════════════╝"+ resetColorCode);
                 } else if (input.equals("/logout")) {
-                    System.out.println("Logging out...");
-                    logout();
+                    System.out.println(blueColorCode + "Logging out..." + resetColorCode);
+                    socket.close();
                     return;
                 } else {
-                    System.out.println("Please use '/help' for more info!");
+                    System.out.println(yellowColorCode + "Invalid command! Please use '/help' for more info!" + resetColorCode);
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error in chat session. Disconnecting...");
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                System.out.println("Error closing the socket.");
-            }
+            System.out.println(redColorCode + "Error in chat session. Disconnecting..." + resetColorCode);
         }
     }
 
@@ -246,33 +239,30 @@ public class ChatClient {
                     String[] parts = message.split(":", 3);
                     String sender = parts[1];
                     String msg = parts[2];
-                    System.out.println("[Private from " + sender + "]: " + msg);
+                    System.out.println(pinkColorCode + "[Private from " + sender + "]: " + msg + resetColorCode);
                 } else if (message.startsWith("SUCCESS:")) {
-                    System.out.println("INFO: " + message.substring(8) + "Successfully");
+                    System.out.println(greenColorCode + "Info: " + message.substring(8) + "Successfully" + resetColorCode);
                 } else if (message.startsWith("INFO:")) {
-                    System.out.println("INFO: " + message.substring(5));
+                    System.out.println(yellowColorCode + "Info: " + message.substring(5) + resetColorCode);
                 } else if (message.startsWith("ERROR:")) {
-                    System.out.println("INFO: " + message.substring(6));
+                    System.out.println(redColorCode + "Error: " + message.substring(6));
                 } else if (message.startsWith("CHAT_HISTORY:")) {
+                    if(message.substring(13).startsWith("INFO")){
+                        System.out.println("Info: " + message.substring(17));
+                    }
                     System.out.println(blueColorCode +"════════════════════════════════════════════"+ resetColorCode);
-                    System.out.println("Chat history:\n" + pinkColorCode + message.substring(13) + resetColorCode);
-                    System.out.println(blueColorCode +"════════════════════════════════════════════" + resetColorCode);
+                    System.out.println(pinkColorCode + "Chat history:" + pinkColorCode);
+                    
+                    String[] parts = message.substring(13).split(":::");
+                    for(int i = 0; i < parts.length; i++){
+                        System.out.println(parts[i]);
+                    }
+                    System.out.println(blueColorCode +"════════════════════════════════════════════"+ resetColorCode);
                 } 
             }
         } catch (IOException e) {
-            System.out.println("Disconnected from the server.");
+            System.out.println(redColorCode + "Disconnected from the server." + resetColorCode);
         }
-    }
-
-    private void logout() {
-        try {
-            if (socket != null && !socket.isClosed()) {
-                socket.close(); // Close the socket
-            }
-        } catch (IOException e) {
-            System.out.println("Error closing the socket.");
-        }
-        start(); // Return to the main menu
     }
 
     public static void main(String[] args) {

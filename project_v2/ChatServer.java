@@ -44,6 +44,68 @@ public class ChatServer {
         }
     }
 
+    // Load user status from file
+    private static void loadUserStatus() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(USER_STATUS_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2) {
+                    String username = parts[0];
+                    for (int i = 1; i < parts.length; i++) {
+                        ClientHandler client = getClientByUsername(username);
+                        if (client != null) {
+                            client.addBlockClient(parts[i]);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("No existing user status found. Starting fresh.");
+        }
+    }
+
+    // Get client by username
+    private static ClientHandler getClientByUsername(String username) {
+        for (ClientHandler client : clients) {
+            if (client.getClientName().equals(username)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+    // Broadcast client list to all clients
+    public static void broadcastClientList() {
+        StringBuilder clientList = new StringBuilder("CLIENT_LIST:");
+        for (ClientHandler client : clients) {
+            clientList.append(client.getClientName()).append(", ");
+        }
+        String message = clientList.toString();
+
+        for (ClientHandler client : clients) {
+            client.sendMessage(message);
+        }
+    }
+
+    // Register a new user
+    public static boolean registerUser(String username, String password) {
+        String lowercaseUsername = username.toLowerCase(); // Convert username to lowercase
+        if (registeredUsers.containsKey(lowercaseUsername)) {
+            return false; // Username already exists (case-insensitive)
+        }
+        registeredUsers.put(lowercaseUsername, password);
+        saveUserData(lowercaseUsername, password); // Save user data to file
+        return true;
+    }
+
+    // Login a user
+    public static boolean loginUser(String username, String password) {
+        String lowercaseUsername = username.toLowerCase(); // Convert username to lowercase
+        return registeredUsers.containsKey(lowercaseUsername)
+                && registeredUsers.get(lowercaseUsername).equals(password);
+    }
+
     // Save user data to file
     private static void saveUserData(String username, String password) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
@@ -54,6 +116,107 @@ public class ChatServer {
         }
     }
 
+    // Save user status to file
+    private static void saveUserStatus(String username, String blockedUser, boolean block) {
+        try {
+            File file = new File(USER_STATUS_FILE);
+            List<String> lines = new ArrayList<>();
+
+            // Read existing lines
+            if (file.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        lines.add(line);
+                    }
+                }
+            }
+
+            // Update or add the line for the user
+            boolean userFound = false;
+            for (int i = 0; i < lines.size(); i++) {
+                if (lines.get(i).startsWith(username)) {
+                    if (block) {
+                        // Add the blocked user
+                        lines.set(i, lines.get(i) + "," + blockedUser);
+                        break;
+                    } else {
+                        // Remove the blocked user
+                        String[] parts = lines.get(i).split(",");
+                        List<String> blockedUsers = new ArrayList<>(Arrays.asList(parts));
+                        blockedUsers.remove(blockedUser);
+                        lines.set(i, String.join(",", blockedUsers));
+                    }
+                    userFound = true;
+                    break;
+                }
+            }
+
+            // If the user was not found, add a new line
+            if (!userFound && block) {
+                lines.add(username + "," + blockedUser);
+            }
+
+            // Write updated lines back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Send private message
+    public static void sendPrivateMessage(String sender, String recipient, String message) {
+        // notify if send to own self
+        String blockedbyRecipient;
+        boolean recipientBlockedYou = false;
+        if (sender.equals(recipient)) {
+            notifySelfMessageError(sender);
+            return;
+        }
+
+        for (ClientHandler client : clients) {
+            if (isUserBlocked(sender, recipient)) {
+                client.sendMessage("INFO: You need to unblock " + recipient + "! before you could send the message to "
+                        + recipient);
+                return;
+            }
+            // if (isUserBlocked(client.getClientName(), sender)) {
+            //     blockedbyRecipient = sender;
+            //     break;
+            // }
+        }
+
+        if(isUserBlocked(recipient, sender)){
+            recipientBlockedYou = true;
+        }
+
+        
+        if(recipientBlockedYou){
+            for(ClientHandler client: clients){
+                if(client.getClientName().equals(sender)){
+                // if(sender.equals(client.getClientName()))
+                // client.sendMessage("INFO: You need "+ recipient + " to unblock you! before you could send the message to "
+                //             + recipient);
+                    client.sendMessage("INFO: You need "+ recipient + " to unblock you! before you could send the message to "
+                            + recipient);
+                            return;
+                }
+            }
+        }
+
+        for (ClientHandler client : clients) {
+                client.sendMessage("PRIVATE_MSG:" + sender + ":" + message);
+                DataManagement.saveChatHistory(sender, recipient, message);
+                break;// Save chat history
+        }
+    }
+
+    // check blocked user
     private static boolean isUserBlocked(String username, String blockedUser) {
         try {
             File file = new File(USER_STATUS_FILE);
@@ -82,192 +245,31 @@ public class ChatServer {
         return false; // User is not blocked
     }
 
-    // Register a new user
-    public static boolean registerUser(String username, String password) {
-        String lowercaseUsername = username.toLowerCase(); // Convert username to lowercase
-        if (registeredUsers.containsKey(lowercaseUsername)) {
-            return false; // Username already exists (case-insensitive)
-        }
-        registeredUsers.put(lowercaseUsername, password);
-        saveUserData(lowercaseUsername, password); // Save user data to file
-        return true;
-    }
-
-    // Login a user
-    public static boolean loginUser(String username, String password) {
-        String lowercaseUsername = username.toLowerCase(); // Convert username to lowercase
-        return registeredUsers.containsKey(lowercaseUsername)
-                && registeredUsers.get(lowercaseUsername).equals(password);
-    }
-
-    // Load user status from file
-    private static void loadUserStatus() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(USER_STATUS_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 2) {
-                    String username = parts[0];
-                    for (int i = 1; i < parts.length; i++) {
-                        ClientHandler client = getClientByUsername(username);
-                        if (client != null) {
-                            client.addblockClient(parts[i]);
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("No existing user status found. Starting fresh.");
-        }
-    }
-
-    // Save user status to file
-    private static void saveUserStatus(String username, String blockedUser, boolean block) {
-        try {
-            File file = new File(USER_STATUS_FILE);
-            List<String> lines = new ArrayList<>();
-
-            // Read existing lines
-            if (file.exists()) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        lines.add(line);
-                    }
-                }
-            }
-
-            // Update or add the line for the user
-            boolean userFound = false;
-            for (int i = 0; i < lines.size(); i++) {
-                String[] parts = lines.get(i).split(",");
-                if (parts[0].equals(username)) {
-                    if (block) {
-                        // Add the blocked user
-                        lines.set(i, lines.get(i) + "," + blockedUser);
-                    } else {
-                        // Remove the blocked user
-                        List<String> blockedUsers = new ArrayList<>(Arrays.asList(parts));
-                        blockedUsers.remove(blockedUser);
-                        lines.set(i, String.join(",", blockedUsers));
-                    }
-                    userFound = true;
-                    break;
-                }
-            }
-
-            // If the user was not found, add a new line
-            if (!userFound && block) {
-                lines.add(username + "," + blockedUser);
-            }
-
-            // Write updated lines back to the file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Save chat history to file
-    private static void saveChatHistory(String sender, String recipient, String message) {
-        String fileName1 = sender.toLowerCase() + "_" + recipient.toLowerCase() + ".txt";
-        String fileName2 = recipient.toLowerCase() + "_" + sender.toLowerCase() + ".txt";
-
-        // Check which file exists
-        File file1 = new File(fileName1);
-        File file2 = new File(fileName2);
-
-        try {
-            if (file1.exists()) {
-                // Append to file1
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file1, true))) {
-                    writer.write(sender + ": " + message);
-                    writer.newLine();
-                }
-            } else if (file2.exists()) {
-                // Append to file2
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file2, true))) {
-                    writer.write(sender + ": " + message);
-                    writer.newLine();
-                }
-            } else {
-                // Create a new file (file1)
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file1, true))) {
-                    writer.write(sender + ": " + message);
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving chat history.");
-        }
-    }
-
-    // Get client by username
-    private static ClientHandler getClientByUsername(String username) {
-        for (ClientHandler client : clients) {
-            if (client.getClientName().equals(username)) {
-                return client;
-            }
-        }
-        return null;
-    }
-
-    // Broadcast client list to all clients
-    public static void broadcastClientList() {
-        StringBuilder clientList = new StringBuilder("CLIENT_LIST:");
-        for (ClientHandler client : clients) {
-            clientList.append(client.getClientName()).append(",");
-        }
-        String message = clientList.toString();
-
-        for (ClientHandler client : clients) {
-            client.sendMessage(message);
-        }
-    }
-
-    // Send private message
-    public static void sendPrivateMessage(String sender, String recipient, String message) {
-        if (sender.equals(recipient)) {
-            notifySelfMessageError(sender);
-            return;
-        }
-
-        for (ClientHandler client : clients) {
-            if (client.getClientName().equals(recipient)) {
-                if (!client.isBlocked(sender)) {
-                    client.sendMessage("PRIVATE_MSG:" + sender + ":" + message);
-                    saveChatHistory(sender, recipient, message); // Save chat history
-                } else {
-                    notifyBlockedMessage(sender, recipient);
-                }
-                break;
-            }
-        }
-    }
-
     // Block a client
     public static void blockClient(String blocker, String blocked) {
         if (blocker.equals(blocked)) {
             notifySelfBlockError(blocker);
             return;
+        } else if (!isUserBlocked(blocker, blocked)) {
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(blocker)) {
+                    client.addBlockClient(blocked);
+                    client.sendMessage("SUCCESS:You have blocked " + blocked);
+                    saveUserStatus(blocker, blocked, true); // Update user status
+                    break;
+                }
+            }
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(blocked)) {
+                    client.sendMessage("INFO:" + blocker + " has blocked you.");
+                    break;
+                }
+            }
+            return;
         }
         for (ClientHandler client : clients) {
             if (client.getClientName().equals(blocker)) {
-                client.addblockClient(blocked);
-                client.sendMessage("SUCCESS:You have blocked " + blocked);
-                saveUserStatus(blocker, blocked, true); // Save user status
-                break;
-            }
-        }
-        for (ClientHandler client : clients) {
-            if (client.getClientName().equals(blocked)) {
-                client.sendMessage("INFO:" + blocker + " has blocked you.");
-                break;
+                client.sendMessage("INFO:You already block" + blocked + " or " + blocked + " is not exist");
             }
         }
         return;
@@ -281,7 +283,7 @@ public class ChatServer {
         } else if (isUserBlocked(unblocker, unblocked)) {
             for (ClientHandler client : clients) {
                 if (client.getClientName().equals(unblocker)) {
-                    client.removeblockClient(unblocked);
+                    client.removeBlockClient(unblocked);
                     client.sendMessage("SUCCESS:You have unblocked " + unblocked);
                     saveUserStatus(unblocker, unblocked, false); // Update user status
                     break;
@@ -306,7 +308,7 @@ public class ChatServer {
     public static void notifyBlockedMessage(String sender, String recipient) {
         for (ClientHandler client : clients) {
             if (client.getClientName().equals(sender)) {
-                client.sendMessage("ERROR:You are blocked by " + recipient);
+                client.sendMessage("INFO:You are blocked by " + recipient);
                 break;
             }
         }
@@ -316,7 +318,7 @@ public class ChatServer {
     public static void notifySelfMessageError(String clientName) {
         for (ClientHandler client : clients) {
             if (client.getClientName().equals(clientName)) {
-                client.sendMessage("ERROR:You cannot send a message to yourself.");
+                client.sendMessage("INFO:You cannot send a message to yourself.");
                 break;
             }
         }
@@ -326,7 +328,7 @@ public class ChatServer {
     public static void notifySelfBlockError(String clientName) {
         for (ClientHandler client : clients) {
             if (client.getClientName().equals(clientName)) {
-                client.sendMessage("ERROR:You cannot block/unblock yourself.");
+                client.sendMessage("INFO:You cannot block/unblock yourself.");
                 break;
             }
         }
@@ -336,41 +338,6 @@ public class ChatServer {
     public static void removeClient(ClientHandler client) {
         clients.remove(client);
         broadcastClientList();
-    }
-
-    public static String getChatHistory(String user1, String user2) {
-        String fileName1 = user1.toLowerCase() + "_" + user2.toLowerCase() + ".txt";
-        String fileName2 = user2.toLowerCase() + "_" + user1.toLowerCase() + ".txt";
-        StringBuilder history = new StringBuilder();
-
-        try {
-            File file1 = new File(fileName1);
-            File file2 = new File(fileName2);
-
-            if (file1.exists()) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        history.append(line).append("\n");
-                    }
-                    reader.close();
-                }
-            } else if (file2.exists()) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        history.append(line).append("\n");
-                    }
-                    reader.close();
-                }
-            } else {
-                history.append("No chat history found.");
-            }
-        } catch (IOException e) {
-            history.append("Error reading chat history.");
-        }
-
-        return history.toString();
     }
 
     // Client handler class
@@ -393,11 +360,11 @@ public class ChatServer {
             out.println(message);
         }
 
-        public void addblockClient(String clientName) {
+        public void addBlockClient(String clientName) {
             blockedClients.add(clientName);
         }
 
-        public void removeblockClient(String clientName) {
+        public void removeBlockClient(String clientName) {
             blockedClients.remove(clientName);
         }
 
@@ -417,49 +384,49 @@ public class ChatServer {
                     String username = in.readLine();
                     String password = in.readLine();
                     if (registerUser(username, password)) {
-                        out.println("SUCCESS:Registration successful. Please login.");
+                        sendMessage("SUCCESS:Registration successful. Please login.");
                     } else {
-                        out.println("ERROR:Username already exists.");
+                        sendMessage("ERROR:Username already exists.");
                         return;
                     }
                 } else if (authType.equals("LOGIN")) {
                     String username = in.readLine();
                     String password = in.readLine();
                     if (loginUser(username, password)) {
-                        out.println("SUCCESS:Login successful.");
-                        this.clientName = username;
+                        sendMessage("SUCCESS:Login successful.");
+                        this.clientName = username.toLowerCase();
                         System.out.println("Client " + clientName + " has joined.");
                         broadcastClientList();
                     } else {
-                        out.println("ERROR:Invalid username or password.");
+                        sendMessage("ERROR:Invalid username or password.");
                         return;
                     }
                 } else {
-                    out.println("ERROR:Invalid authentication type.");
+                    sendMessage("ERROR:Invalid authentication type.");
                     return;
                 }
 
                 // Handle chat commands
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
-                    if (inputLine.startsWith("PRIVATE_MSG:")) {
+                    if (inputLine.startsWith("/chat")) {
                         String[] parts = inputLine.split(":", 3);
                         String recipient = parts[1];
                         String message = parts[2];
                         sendPrivateMessage(clientName, recipient, message);
-                    } else if (inputLine.startsWith("/block ")) {
-                        String[] parts = inputLine.split(" ", 2);
+                    } else if (inputLine.startsWith("/block")) {
+                        String[] parts = inputLine.split(":", 2);
                         String blockedClient = parts[1];
                         blockClient(clientName, blockedClient);
-                    } else if (inputLine.startsWith("/unblock ")) {
-                        String[] parts = inputLine.split(" ", 2);
+                    } else if (inputLine.startsWith("/unblock")) {
+                        String[] parts = inputLine.split(":", 2);
                         String unblockedClient = parts[1];
                         unblockClient(clientName, unblockedClient);
-                    } else if (inputLine.startsWith("/history ")) {
-                        String[] parts = inputLine.split(" ", 2);
+                    } else if (inputLine.startsWith("/history")) {
+                        String[] parts = inputLine.split(":", 2);
                         String otherUser = parts[1];
-                        String history = getChatHistory(clientName, otherUser);
-                        out.println("CHAT_HISTORY:" + history);
+                        String historyText = DataManagement.getChatHistory(clientName, otherUser);
+                        sendMessage("CHAT_HISTORY:" + historyText);
                     }
                 }
             } catch (IOException e) {
