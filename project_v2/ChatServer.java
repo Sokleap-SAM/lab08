@@ -172,47 +172,64 @@ public class ChatServer {
     // Send private message
     public static void sendPrivateMessage(String sender, String recipient, String message) {
         // notify if send to own self
-        String blockedbyRecipient;
         boolean recipientBlockedYou = false;
         if (sender.equals(recipient)) {
             notifySelfMessageError(sender);
             return;
         }
 
-        for (ClientHandler client : clients) {
-            if (isUserBlocked(sender, recipient)) {
-                client.sendMessage("INFO: You need to unblock " + recipient + "! before you could send the message to "
-                        + recipient);
-                return;
-            }
-            // if (isUserBlocked(client.getClientName(), sender)) {
-            //     blockedbyRecipient = sender;
-            //     break;
-            // }
-        }
+        // for (ClientHandler client : clients) {
+        // if (isUserBlocked(sender, recipient)) {
+        // client.sendMessage("INFO: You need to unblock " + recipient + "! before you
+        // could send the message to "
+        // + recipient);
+        // return;
+        // }
+        // // if (isUserBlocked(client.getClientName(), sender)) {
+        // // blockedbyRecipient = sender;
+        // // break;
+        // // }
+        // }
 
-        if(isUserBlocked(recipient, sender)){
+        if (isUserBlocked(recipient, sender)) {
             recipientBlockedYou = true;
         }
 
-        
-        if(recipientBlockedYou){
-            for(ClientHandler client: clients){
-                if(client.getClientName().equals(sender)){
-                // if(sender.equals(client.getClientName()))
-                // client.sendMessage("INFO: You need "+ recipient + " to unblock you! before you could send the message to "
-                //             + recipient);
-                    client.sendMessage("INFO: You need "+ recipient + " to unblock you! before you could send the message to "
-                            + recipient);
-                            return;
+        if (recipientBlockedYou) {
+            for (ClientHandler client : clients) {
+                if (client.getClientName().equals(sender)) {
+                    // if(sender.equals(client.getClientName()))
+                    // client.sendMessage("INFO: You need "+ recipient + " to unblock you! before
+                    // you could send the message to "
+                    // + recipient);
+                    client.sendMessage(
+                            "INFO: You need " + recipient + " to unblock you! before you could send the message to "
+                                    + recipient);
+                    return;
                 }
             }
         }
 
+        // if (isUserBlocked(recipient, sender)) {
+        //     recipientBlockedYou = true;
+        // }
+
+        if (isUserBlocked(sender, recipient)) {
+            for (ClientHandler client : clients) {
+                    if(client.getClientName().equals(sender)){
+                        client.sendMessage("INFO: You need to unblock " + recipient + "! before you could send the message to "
+                        + recipient);
+                    return;
+                    }
+                }
+        }
+
         for (ClientHandler client : clients) {
+            if (client.getClientName().equals(recipient)) {
                 client.sendMessage("PRIVATE_MSG:" + sender + ":" + message);
                 DataManagement.saveChatHistory(sender, recipient, message);
-                break;// Save chat history
+                return;
+            }
         }
     }
 

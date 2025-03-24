@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ChatClient {
-    private static final String SERVER_IP = "192.168.0.154"; // Replace with your server's IP
+    private static final String SERVER_IP = "192.168.204.48"; // Replace with your server's IP
     private static final int PORT = 12345;
     private Socket socket;
     private PrintWriter out;
@@ -241,7 +241,7 @@ public class ChatClient {
                     String msg = parts[2];
                     System.out.println(pinkColorCode + "[Private from " + sender + "]: " + msg + resetColorCode);
                 } else if (message.startsWith("SUCCESS:")) {
-                    System.out.println(greenColorCode + "Info: " + message.substring(8) + "Successfully" + resetColorCode);
+                    System.out.println(greenColorCode + "Info: " + message.substring(8) + " Successfully" + resetColorCode);
                 } else if (message.startsWith("INFO:")) {
                     System.out.println(yellowColorCode + "Info: " + message.substring(5) + resetColorCode);
                 } else if (message.startsWith("ERROR:")) {
