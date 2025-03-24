@@ -54,7 +54,6 @@ public class ChatClient {
                     case "2":
                         if (loginUser(scanner)) {
                             enterChat();
-                            return; // Exit the menu and start chatting
                         }
                         break;
                     case "3":
