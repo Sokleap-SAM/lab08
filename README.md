@@ -4,8 +4,8 @@ Welcome to our chat application, a simple chat application designed to connect y
 -SAM Sokleap  
 -KHEANG Ann  
 ## TableContent  
-- [Developer](##Developer)
-- [Training](##Training)
+- [Developer](#Developer)
+- [Training](#Training)
 ## User manual  
 **Getting Started: Account Creation and Login:**
 1. Clone and Run the ChatServer.java on your device to host the server.   
