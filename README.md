@@ -30,7 +30,8 @@ Welcome to our chat application, a simple chat application designed to connect y
    -Features Overview  
      .Real-time terminal based messaging    
      .Supports local and network communication  
-     .Simple, text-based interface  
+     .Simple, text-based interface
+3.   Yes, I am capable of training other teams on how to use the software. I can provide clear explanations, hands-on demonstrations, and step-by-step guides to ensure team members understand the installation process, key features, and troubleshooting methods. Additionally, I am open to creating training materials and offering ongoing support to help teams effectively use the application.    
  
 ## Getting Started: Account Creation and Login:  
 1. Clone and Run the ChatServer.java on your device to host the server.   
