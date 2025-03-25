@@ -12,7 +12,8 @@ Welcome to our chat application, a simple chat application designed to connect y
 ## Unit tests
 1. Yes, my project is completed successfully.  
   1.1. Yes, the software has been thoroughly tested and is currently bug-free.      
-       1.1.1. Yes, the software is ready to be published. We plan to release it on the GitHub to  make it accessible to user and another developer.
+       1.1.1. Yes, the software is ready to be published. We plan to release it on the GitHub to  make it accessible to user and another developer.  
+2. 
  
 ## Getting Started: Account Creation and Login:  
 1. Clone and Run the ChatServer.java on your device to host the server.   
