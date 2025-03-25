@@ -117,7 +117,7 @@ public class ChatServer {
     }
 
     // Save user status to file
-    private static void saveUserStatus(String username, String blockedUser, boolean block) {
+    public static void saveUserStatus(String username, String blockedUser, boolean block) {
         try {
             File file = new File(USER_STATUS_FILE);
             List<String> lines = new ArrayList<>();
@@ -234,7 +234,7 @@ public class ChatServer {
     }
 
     // check blocked user
-    private static boolean isUserBlocked(String username, String blockedUser) {
+    public static boolean isUserBlocked(String username, String blockedUser) {
         try {
             File file = new File(USER_STATUS_FILE);
             if (!file.exists()) {
