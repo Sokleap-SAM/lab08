@@ -14,7 +14,23 @@ Welcome to our chat application, a simple chat application designed to connect y
   1.1. Yes, the software has been thoroughly tested and is currently bug-free.      
        1.1.1. Yes, the software is ready to be published. We plan to release it on the GitHub to  make it accessible to user and another developer.  
 2. User Manual - Java Terminal Chat Application   
-   -Introduction: The java Terminal Chat Application enables real time messaging between multiple user via a terminal/command line interface, supporting local and network connections.
+   -Introduction: The java Terminal Chat Application enables real time messaging between multiple user via a terminal/command line interface, supporting local and network connections.  
+   -System Requirements  
+     .Java Development Kit (JDK) 17 or higher    
+     .Windows, Linux, or maxOS  
+     .Terminal or Command Prompt  
+   -Installation Guide  
+     .Check Java Installation: Ensure Java is installed using java -version.  
+     .Download Application: Obtain the application files from the provided source.  
+     .Compile the Code: Navigate to the application directory and run javac *.java.  
+   -How to use the appplication  
+     .Start the Server: Run java ChatServer on one terminal.  
+     .Start the Client: On another terminal, run java ChatClient <server_ip_address>.  
+     .Chat: Type messages and press Enter to send.  
+   -Features Overview  
+     .Real-time terminal based messaging    
+     .Supports local and network communication  
+     .Simple, text-based interface  
  
 ## Getting Started: Account Creation and Login:  
 1. Clone and Run the ChatServer.java on your device to host the server.   
